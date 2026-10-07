@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard – Helpalot Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/bootstrap-icons.css" rel="stylesheet">
+  <link href="css/Main-style.css" rel="stylesheet">
+<link href="css/helpalot-theme.css" rel="stylesheet">
+<link rel="icon" href="images/helpalot-icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#5B3DF5">
+  <style>
+    body{background:#f4f6f8;}
+    .admin-sidebar{position:fixed;top:0;left:0;width:240px;height:100vh;background:linear-gradient(180deg,#14112B,#5B3DF5);padding:0;overflow-y:auto;z-index:100;}
+    .sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.1);}
+    .sidebar-logo img{height:36px;}
+    .sidebar-logo span{color:#fff;font-weight:700;font-size:13px;display:block;margin-top:6px;opacity:.8;}
+    .sidebar-nav{padding:16px 0;}
+    .sidebar-link{display:flex;align-items:center;gap:10px;padding:11px 20px;color:rgba(255,255,255,.75);font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border-left:3px solid transparent;}
+    .sidebar-link:hover,.sidebar-link.active{background:rgba(255,255,255,.12);color:#fff;border-left-color:#fff;}
+    .sidebar-link i{font-size:17px;width:20px;}
+    .sidebar-section{padding:10px 20px 4px;color:rgba(255,255,255,.4);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;}
+    .admin-main{margin-left:240px;min-height:100vh;}
+    .admin-topbar{background:#fff;padding:14px 28px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.06);position:sticky;top:0;z-index:50;}
+    .admin-topbar h5{margin:0;font-weight:700;}
+    .admin-body{padding:28px;}
+    .stat-card{background:#fff;border-radius:16px;padding:22px;box-shadow:0 4px 16px rgba(0,0,0,.06);display:flex;align-items:center;gap:16px;}
+    .stat-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;}
+    .stat-card h3{margin:0;font-weight:800;font-size:28px;}
+    .stat-card p{margin:0;color:#717275;font-size:13px;}
+    .section-card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 4px 16px rgba(0,0,0,.06);margin-bottom:24px;}
+    .section-card h4{font-weight:700;margin-bottom:18px;font-size:17px;}
+    .tab-pane-admin{display:none;}.tab-pane-admin.active{display:block;}
+    .status-badge{display:inline-block;padding:3px 12px;border-radius:100px;font-size:12px;font-weight:700;text-transform:uppercase;}
+    .s-pending{background:#FFF3CD;color:#8a6d3b;}
+    .s-approved{background:#E6F6EC;color:#1A7F4E;}
+    .s-rejected{background:#FDE8E8;color:#C53030;}
+    table th{font-size:12px;color:#717275;text-transform:uppercase;font-weight:700;}
+    table td{font-size:14px;vertical-align:middle;}
+    .form-section{background:#f4f6f8;border-radius:12px;padding:20px;margin-bottom:20px;}
+    .form-section h6{font-weight:700;margin-bottom:14px;}
+    .btn-accent{background:#5B3DF5;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-weight:600;font-size:14px;}
+    .btn-accent:hover{background:#4A2FD6;color:#fff;}
+    @media(max-width:991px){.admin-sidebar{position:relative;width:100%;height:auto;}.admin-main{margin-left:0;}}
+    .announce-item{border-left:3px solid #5B3DF5;padding:10px 14px;background:#f4f6f8;border-radius:0 10px 10px 0;margin-bottom:10px;}
+    .meet-card{border:1px solid #eee;border-radius:12px;padding:16px;margin-bottom:12px;}
+    .meet-card h6{font-weight:700;margin-bottom:4px;}
+    .progress-bar-helpalot{background:#5B3DF5;border-radius:100px;height:8px;}
+    #appShell{display:none;}
+    #loginGate{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f4f6f8;padding:20px;}
+    #loginGate .login-card{background:#fff;border-radius:16px;padding:32px;box-shadow:0 4px 20px rgba(0,0,0,.08);max-width:420px;width:100%;}
+  </style>
+</head>
+<body>
+
+<!-- LOGIN GATE (shown until an authorized admin is signed in; no page navigation happens on login/logout so it also works when this file is opened directly, e.g. file://) -->
+<div id="loginGate">
+  <div class="login-card">
+    <h4 style="font-weight:700;margin-bottom:6px;"><i class="bi bi-shield-lock me-2" style="color:#5B3DF5;"></i>Admin Access</h4>
+    <p style="color:#717275;font-size:14px;margin-bottom:20px;">Default credentials: <strong>admin@helpalot.help</strong> / <strong>admin123</strong></p>
+    <div id="msgBox" style="display:none;padding:12px 16px;border-radius:10px;font-size:14px;margin-bottom:16px;"></div>
+    <div class="mb-3"><input type="email" id="adminEmail" class="form-control" value="admin@helpalot.help" placeholder="Admin Email"></div>
+    <div class="mb-3"><input type="password" id="adminPass" class="form-control" value="admin123" placeholder="Password"></div>
+    <button type="button" onclick="doAdminLogin()" id="loginBtn" class="btn custom-btn w-100 mb-3">Login to Admin Dashboard</button>
+    <hr>
+    <p style="font-size:13px;color:#717275;margin-bottom:8px;">First time setup? Create the admin account in Firebase:</p>
+    <button type="button" onclick="createAdmin()" class="btn btn-outline-secondary w-100">Create Admin Account (First Time Only)</button>
+  </div>
+</div>
+
+<div id="appShell">
+<!-- SIDEBAR -->
+<div class="admin-sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <span class="hp-logo">helpalot</span>
+    <span>Academy Admin</span>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="sidebar-section">Overview</div>
+    <a class="sidebar-link active" href="#" onclick="showTab('dashboard',this)"><i class="bi bi-grid"></i>Dashboard</a>
+    <a class="sidebar-link" href="#" onclick="showTab('analytics',this)"><i class="bi bi-bar-chart-line"></i>Analytics</a>
+
+    <div class="sidebar-section">Students</div>
+    <a class="sidebar-link" href="#" onclick="showTab('students',this)"><i class="bi bi-people"></i>All Students</a>
+    <a class="sidebar-link" href="#" onclick="showTab('pending',this)"><i class="bi bi-hourglass-split"></i>Pending Approval <span id="pendingBadge" style="background:#FF8A3D;color:#fff;border-radius:100px;padding:1px 8px;font-size:11px;margin-left:4px;">0</span></a>
+
+    <div class="sidebar-section">Academics</div>
+    <a class="sidebar-link" href="#" onclick="showTab('courses',this)"><i class="bi bi-journal-bookmark"></i>Courses</a>
+    <a class="sidebar-link" href="#" onclick="showTab('assignments',this)"><i class="bi bi-clipboard-check"></i>Assignments</a>
+    <a class="sidebar-link" href="#" onclick="showTab('content',this)"><i class="bi bi-book"></i>Learning Content</a>
+    <a class="sidebar-link" href="#" onclick="showTab('meetings',this)"><i class="bi bi-camera-video"></i>Classes / Meetings</a>
+
+    <div class="sidebar-section">Operations</div>
+    <a class="sidebar-link" href="#" onclick="showTab('submissions',this)"><i class="bi bi-inbox"></i>Submissions</a>
+    <a class="sidebar-link" href="#" onclick="showTab('announcements',this)"><i class="bi bi-megaphone"></i>Announcements</a>
+    <a class="sidebar-link" href="#" onclick="showTab('certificates',this)"><i class="bi bi-award"></i>Certificates</a>
+    <a class="sidebar-link" href="#" onclick="showTab('tickets',this)"><i class="bi bi-headset"></i>Support Tickets</a>
+    <a class="sidebar-link" href="#" onclick="showTab('trainers',this)"><i class="bi bi-person-badge"></i>Trainers</a>
+
+    <div style="padding:20px;">
+      <a class="sidebar-link" href="#" onclick="doLogout()" style="padding:10px 0;border:none;"><i class="bi bi-box-arrow-left"></i>Logout</a>
+    </div>
+  </nav>
+</div>
+
+<!-- MAIN -->
+<div class="admin-main">
+  <div class="admin-topbar">
+    <h5 id="pageTitle"><i class="bi bi-grid me-2" style="color:#5B3DF5;"></i>Dashboard</h5>
+    <div><span id="adminName" style="font-size:13px;color:#717275;margin-right:12px;"></span><span style="background:#EFEBFF;color:#5B3DF5;border-radius:100px;padding:4px 14px;font-size:13px;font-weight:700;">Admin</span></div>
+  </div>
+
+  <div class="admin-body">
+
+    <!-- ===== DASHBOARD TAB ===== -->
+    <div id="tab-dashboard" class="tab-pane-admin active">
+      <div class="row g-4 mb-4">
+        <div class="col-lg-3 col-md-6 col-12"><div class="stat-card"><div class="stat-icon" style="background:#5B3DF5;"><i class="bi bi-people"></i></div><div><h3 id="st-total">–</h3><p>Total Students</p></div></div></div>
+        <div class="col-lg-3 col-md-6 col-12"><div class="stat-card"><div class="stat-icon" style="background:#FF8A3D;"><i class="bi bi-hourglass-split"></i></div><div><h3 id="st-pending">–</h3><p>Pending</p></div></div></div>
+        <div class="col-lg-3 col-md-6 col-12"><div class="stat-card"><div class="stat-icon" style="background:#12B8A6;"><i class="bi bi-check-circle"></i></div><div><h3 id="st-approved">–</h3><p>Approved</p></div></div></div>
+        <div class="col-lg-3 col-md-6 col-12"><div class="stat-card"><div class="stat-icon" style="background:#14112B;"><i class="bi bi-clipboard-check"></i></div><div><h3 id="st-subs">–</h3><p>Submissions</p></div></div></div>
+      </div>
+      <div class="row g-4">
+        <div class="col-lg-8 col-12">
+          <div class="section-card">
+            <h4>Recent Registrations</h4>
+            <table class="table"><thead><tr><th>Name</th><th>Domain</th><th>College</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="recentStudents"></tbody></table>
+          </div>
+        </div>
+        <div class="col-lg-4 col-12">
+          <div class="section-card">
+            <h4>Today's Class</h4>
+            <div id="todayMeeting"><p style="color:#A6A6A6;font-size:14px;">No class scheduled today.</p></div>
+            <button class="btn-accent mt-3 w-100" onclick="showTab('meetings',document.querySelector('[onclick*=meetings]'))">Schedule Class</button>
+          </div>
+          <div class="section-card mt-3">
+            <h4>Quick Links</h4>
+            <div class="d-grid gap-2">
+              <button class="btn-accent" onclick="showTab('pending',document.querySelector('[onclick*=pending]'))"><i class="bi bi-hourglass-split me-2"></i>Review Pending Students</button>
+              <button class="btn btn-outline-secondary" onclick="showTab('announcements',document.querySelector('[onclick*=announcements]'))"><i class="bi bi-megaphone me-2"></i>Post Announcement</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PENDING TAB ===== -->
+    <div id="tab-pending" class="tab-pane-admin">
+      <div class="section-card">
+        <h4>Pending Applications</h4>
+        <div id="pendingList"><p style="color:#A6A6A6;">Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- ===== ALL STUDENTS TAB ===== -->
+    <div id="tab-students" class="tab-pane-admin">
+      <div class="section-card">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 style="margin:0;">All Students</h4>
+          <input type="text" id="studentSearch" class="form-control" style="max-width:240px;" placeholder="Search name/email..." oninput="filterStudents()">
+        </div>
+        <div class="table-responsive">
+          <table class="table"><thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Domain</th><th>College</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="allStudentsBody"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== COURSES TAB ===== -->
+    <div id="tab-courses" class="tab-pane-admin">
+      <div class="form-section">
+        <h6>Add New Course / Program</h6>
+        <div class="row g-2">
+          <div class="col-md-4"><input class="form-control" id="cName" placeholder="Course name (e.g. Cloud Engineer)"></div>
+          <div class="col-md-2"><input class="form-control" id="cDuration" placeholder="Duration (e.g. 3 months)"></div>
+          <div class="col-md-2"><input class="form-control" id="cFee" placeholder="Fee (e.g. ₹2999/mo)"></div>
+          <div class="col-md-2"><input class="form-control" id="cLevel" placeholder="Level"></div>
+          <div class="col-md-2"><button class="btn-accent w-100" onclick="addCourse()">Add Course</button></div>
+          <div class="col-12"><textarea class="form-control" id="cDesc" placeholder="Description" rows="2"></textarea></div>
+        </div>
+      </div>
+      <div class="section-card">
+        <h4>All Courses</h4>
+        <div id="coursesList"><p style="color:#A6A6A6;">Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- ===== ASSIGNMENTS TAB ===== -->
+    <div id="tab-assignments" class="tab-pane-admin">
+      <div class="form-section">
+        <h6>Create Assignment / Task</h6>
+        <div class="row g-2">
+          <div class="col-md-5"><input class="form-control" id="taskTitle" placeholder="Assignment title *"></div>
+          <div class="col-md-3"><select class="form-control" id="taskTarget"><option value="all">All Approved Students</option></select></div>
+          <div class="col-md-2"><input class="form-control" type="date" id="taskDue"></div>
+          <div class="col-md-2"><button class="btn-accent w-100" onclick="addTask()">Assign</button></div>
+          <div class="col-12"><textarea class="form-control" id="taskDesc" rows="2" placeholder="Task description *"></textarea></div>
+        </div>
+      </div>
+      <div class="section-card">
+        <h4>All Assignments</h4>
+        <div id="tasksList"><p style="color:#A6A6A6;">Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- ===== CONTENT TAB ===== -->
+    <div id="tab-content" class="tab-pane-admin">
+      <div class="form-section">
+        <h6>Add Learning Content</h6>
+        <div class="row g-2">
+          <div class="col-md-4"><input class="form-control" id="contTitle" placeholder="Content title *"></div>
+          <div class="col-md-5"><input class="form-control" id="contLink" placeholder="Link (YouTube / PDF / Drive URL) *"></div>
+          <div class="col-md-3"><button class="btn-accent w-100" onclick="addContent()">Add Content</button></div>
+          <div class="col-12"><textarea class="form-control" id="contDesc" rows="2" placeholder="Short description"></textarea></div>
+        </div>
+      </div>
+      <div class="section-card">
+        <h4>All Content</h4>
+        <div id="contentList"><p style="color:#A6A6A6;">Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- ===== MEETINGS TAB ===== -->
+    <div id="tab-meetings" class="tab-pane-admin">
+      <div class="form-section">
+        <h6>Schedule Class / Meeting</h6>
+        <div class="row g-2">
+          <div class="col-md-4"><input class="form-control" id="meetTitle" placeholder="Class title (e.g. Cloud Intro - Day 1)"></div>
+          <div class="col-md-3"><input class="form-control" id="meetLink" placeholder="Meeting link (Zoom / GMeet / custom)"></div>
+          <div class="col-md-2"><input class="form-control" type="date" id="meetDate"></div>
+          <div class="col-md-2"><input class="form-control" type="time" id="meetTime" value="19:00"></div>
+          <div class="col-md-1"><button class="btn-accent w-100" onclick="addMeeting()">Add</button></div>
+        </div>
+      </div>
+      <div class="section-card">
+        <h4>Scheduled Classes</h4>
+        <div id="meetingsList"><p style="color:#A6A6A6;">Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- ===== SUBMISSIONS TAB ===== -->
+    <div id="tab-submissions" class="tab-pane-admin">
+      <div class="section-card">
+        <h4>All Student Submissions</h4>
+        <div class="table-responsive">
+          <table class="table"><thead><tr><th>Student</th><th>Assignment</th><th>Link</th><th>Notes</th><th>Submitted</th></tr></thead>
+          <tbody id="subsBody"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ANNOUNCEMENTS TAB ===== -->
+    <div id="tab-announcements" class="tab-pane-admin">
+      <div class="form-section">
+        <h6>Post Announcement</h6>
+        <div class="row g-2">
+          <div class="col-md-9"><input class="form-control" id="annTitle" placeholder="Announcement title *"></div>
+          <div class="col-md-3"><button class="btn-accent w-100" onclick="addAnnouncement()">Post</button></div>
+          <div class="col-12"><textarea class="form-control" id="annBody" rows="3" placeholder="Announcement message *"></textarea></div>
+        </div>
+      </div>
+      <div class="section-card">
+        <h4>All Announcements</h4>
+        <div id="annList"><p style="color:#A6A6A6;">Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- ===== CERTIFICATES TAB ===== -->
+    <div id="tab-certificates" class="tab-pane-admin">
+      <div class="section-card">
+        <h4>Issue Certificate</h4>
+        <p style="color:#717275;font-size:14px;">Select an approved student and issue a completion certificate. A unique certificate number will be generated automatically.</p>
+        <div class="row g-2">
+          <div class="col-md-5"><select class="form-control" id="certStudent"><option value="">Select student...</option></select></div>
+          <div class="col-md-4"><input class="form-control" id="certCourse" placeholder="Course completed"></div>
+          <div class="col-md-3"><button class="btn-accent w-100" onclick="issueCertificate()">Issue Certificate</button></div>
+        </div>
+      </div>
+      <div class="section-card">
+        <h4>Issued Certificates</h4>
+        <div class="table-responsive">
+          <table class="table"><thead><tr><th>Certificate No.</th><th>Student</th><th>Course</th><th>Issued</th><th>View</th></tr></thead>
+          <tbody id="certsBody"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ANALYTICS TAB ===== -->
+    <div id="tab-analytics" class="tab-pane-admin">
+      <div class="row g-4">
+        <div class="col-lg-6 col-12">
+          <div class="section-card">
+            <h4>Student Breakdown</h4>
+            <div id="analyticsBreakdown"><p style="color:#A6A6A6;">Loading...</p></div>
+          </div>
+        </div>
+        <div class="col-lg-6 col-12">
+          <div class="section-card">
+            <h4>Domain Wise Registrations</h4>
+            <div id="domainAnalytics"><p style="color:#A6A6A6;">Loading...</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ===== TICKETS TAB ===== -->
+    <div id="tab-tickets" class="tab-pane-admin">
+      <div class="section-card">
+        <h4>Support Tickets from Students</h4>
+        <div class="table-responsive">
+          <table class="table"><thead><tr><th>Student</th><th>Category</th><th>Issue</th><th>Description</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="ticketsBody"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TRAINERS TAB ===== -->
+    <div id="tab-trainers" class="tab-pane-admin">
+      <div class="form-section">
+        <h6>Add Trainer</h6>
+        <div class="row g-2">
+          <div class="col-md-3"><input class="form-control" id="trName" placeholder="Trainer Name *"></div>
+          <div class="col-md-3"><input class="form-control" id="trEmail" placeholder="Email *"></div>
+          <div class="col-md-3"><input class="form-control" id="trSubject" placeholder="Subject / Domain *"></div>
+          <div class="col-md-3"><button class="btn-accent w-100" onclick="addTrainer()">Add Trainer</button></div>
+        </div>
+      </div>
+      <div class="section-card">
+        <h4>All Trainers</h4>
+        <div class="table-responsive">
+          <table class="table"><thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Dashboard</th><th></th></tr></thead>
+          <tbody id="trainersBody"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end admin-body -->
+</div><!-- end admin-main -->
+</div><!-- end appShell -->
+
+<script src="js/jquery.min.js"></script><script src="js/bootstrap.bundle.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig={apiKey:"AIzaSyDoaJ4fOXZHWqKYlTo9nCf-Dy6IEwCvXKg",authDomain:"ndyo-intrenship.firebaseapp.com",projectId:"ndyo-intrenship",storageBucket:"ndyo-intrenship.firebasestorage.app",messagingSenderId:"1053500008575",appId:"1:1053500008575:web:4c599d68a06eaf09c7374a"};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(), db=firebase.firestore();
+const ADMIN_EMAILS=["admin@helpalot.help"];
+
+let allStudentsCache=[];
+
+// NOTE: Login/logout never navigate to a different HTML file. Under file://
+// (opening this file directly by double-click) the browser blocks the
+// storage Firebase needs to remember a session across page loads, so any
+// real navigation after login instantly loses the session. Staying on one
+// page and just toggling the view avoids that entirely, so this also works
+// when opened directly as a file, with no local server needed.
+
+function msg(text,type){const el=document.getElementById('msgBox');el.textContent=text;el.style.background=type==='error'?'#FDE8E8':type==='success'?'#E6F6EC':'#EFEBFF';el.style.color=type==='error'?'#C53030':type==='success'?'#1A7F4E':'#4A2FD6';el.style.display='block';}
+
+async function doAdminLogin(){
+  const email=document.getElementById('adminEmail').value.trim();
+  const pass=document.getElementById('adminPass').value;
+  const btn=document.getElementById('loginBtn');
+  if(!ADMIN_EMAILS.includes(email.toLowerCase())){msg('This email is not authorized as admin.','error');return;}
+  btn.disabled=true;btn.textContent='Logging in...';
+  try{
+    await auth.signInWithEmailAndPassword(email,pass);
+    msg('Login successful!','success');
+    // onAuthStateChanged below handles switching to the dashboard view
+  }catch(e){msg(e.message,'error');}
+  finally{btn.disabled=false;btn.textContent='Login to Admin Dashboard';}
+}
+
+async function createAdmin(){
+  const email=document.getElementById('adminEmail').value.trim();
+  const pass=document.getElementById('adminPass').value;
+  if(!email||!pass){msg('Enter email and password first.','error');return;}
+  if(!ADMIN_EMAILS.includes(email.toLowerCase())){msg('This email is not in the admin list.','error');return;}
+  if(pass.length<6){msg('Password must be at least 6 characters.','error');return;}
+  try{
+    await auth.createUserWithEmailAndPassword(email,pass);
+    await auth.signOut();
+    msg('Admin account created! Now click Login.','success');
+  }catch(e){msg(e.message,'error');}
+}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('loginGate').style.display!=='none')doAdminLogin();});
+
+function doLogout(){auth.signOut();}
+
+// Auth guard — shows/hides the login gate vs the dashboard shell in place,
+// no page navigation involved.
+auth.onAuthStateChanged(async user=>{
+  const gate=document.getElementById('loginGate'), shell=document.getElementById('appShell');
+  if(!user||!ADMIN_EMAILS.includes(user.email.toLowerCase())){
+    shell.style.display='none';
+    gate.style.display='flex';
+    return;
+  }
+  gate.style.display='none';
+  shell.style.display='block';
+  document.getElementById('adminName').textContent=user.email;
+  loadAll();
+});
+
+// Tab switching
+function showTab(name,el){
+  document.querySelectorAll('.tab-pane-admin').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-link').forEach(l=>l.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(el)el.classList.add('active');
+  const titles={dashboard:'Dashboard',pending:'Pending Approvals',students:'All Students',courses:'Courses',assignments:'Assignments',content:'Learning Content',meetings:'Classes & Meetings',submissions:'Submissions',announcements:'Announcements',certificates:'Certificates',analytics:'Analytics'};
+  document.getElementById('pageTitle').innerHTML=`<i class="bi bi-grid me-2" style="color:#5B3DF5;"></i>${titles[name]||name}`;
+  return false;
+}
+
+async function loadAll(){
+  loadStudents(); loadCourses(); loadTasks(); loadContent(); loadMeetings(); loadSubmissions(); loadAnnouncements(); loadCerts();
+}
+
+// STUDENTS
+async function loadStudents(){
+  const snap=await db.collection('students').orderBy('appliedAt','desc').get();
+  allStudentsCache=[];
+  snap.forEach(doc=>allStudentsCache.push({id:doc.id,...doc.data()}));
+  renderStudentStats();
+  renderPending();
+  renderAllStudents(allStudentsCache);
+  populateSelects();
+  renderAnalytics();
+}
+
+function renderStudentStats(){
+  const total=allStudentsCache.length;
+  const pend=allStudentsCache.filter(s=>s.status==='pending').length;
+  const appr=allStudentsCache.filter(s=>s.status==='approved').length;
+  document.getElementById('st-total').textContent=total;
+  document.getElementById('st-pending').textContent=pend;
+  document.getElementById('st-approved').textContent=appr;
+  document.getElementById('pendingBadge').textContent=pend;
+  // recent
+  const recent=allStudentsCache.slice(0,5);
+  document.getElementById('recentStudents').innerHTML=recent.map(s=>`
+    <tr><td>${s.name}</td><td>${s.domain}</td><td>${s.college||''}</td>
+    <td><span class="status-badge s-${s.status}">${s.status}</span></td>
+    <td>${s.status==='pending'?`<button class="btn btn-sm btn-success me-1" onclick="setStatus('${s.id}','approved')">Accept</button><button class="btn btn-sm btn-danger" onclick="setStatus('${s.id}','rejected')">Reject</button>`:'–'}</td></tr>
+  `).join('');
+}
+
+function renderPending(){
+  const pend=allStudentsCache.filter(s=>s.status==='pending');
+  const el=document.getElementById('pendingList');
+  if(!pend.length){el.innerHTML='<p style="color:#A6A6A6;">No pending applications. 🎉</p>';return;}
+  el.innerHTML=pend.map(s=>`
+    <div style="border:1px solid #eee;border-radius:12px;padding:18px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <div>
+        <strong>${s.name}</strong><br>
+        <small style="color:#717275;">${s.email} • ${s.phone||''} • ${s.domain} • ${s.college||''} • ${s.degree||''} ${s.year||''}</small>
+        ${s.why?`<br><small style="color:#A6A6A6;font-style:italic;">"${s.why.substring(0,100)}..."</small>`:''}
+      </div>
+      <div>
+        <button class="btn btn-sm btn-success me-2" onclick="setStatus('${s.id}','approved')"><i class="bi bi-check-lg"></i> Accept</button>
+        <button class="btn btn-sm btn-danger me-2" onclick="setStatus('${s.id}','rejected')"><i class="bi bi-x-lg"></i> Reject</button>
+        <button class="btn btn-sm btn-outline-secondary" onclick="askDocs('${s.id}','${s.email}')"><i class="bi bi-file-earmark"></i> Ask Docs</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderAllStudents(list){
+  document.getElementById('allStudentsBody').innerHTML=list.map((s,i)=>`
+    <tr>
+      <td>${i+1}</td><td>${s.name}</td><td>${s.email}</td><td>${s.phone||''}</td>
+      <td>${s.domain}</td><td>${s.college||''}</td>
+      <td><span class="status-badge s-${s.status}">${s.status}</span></td>
+      <td>
+        ${s.status!=='approved'?`<button class="btn btn-sm btn-success me-1" onclick="setStatus('${s.id}','approved')">✓</button>`:''} 
+        ${s.status!=='rejected'?`<button class="btn btn-sm btn-danger" onclick="setStatus('${s.id}','rejected')">✗</button>`:''}
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterStudents(){
+  const q=document.getElementById('studentSearch').value.toLowerCase();
+  const filtered=allStudentsCache.filter(s=>(s.name+s.email+s.domain+s.college).toLowerCase().includes(q));
+  renderAllStudents(filtered);
+}
+
+async function setStatus(uid,status){
+  await db.collection('students').doc(uid).update({status});
+  loadStudents();
+}
+async function askDocs(uid,email){
+  alert(`Email sent to ${email} requesting documents. (In production: trigger email via Cloud Function)`);
+}
+
+function populateSelects(){
+  const approved=allStudentsCache.filter(s=>s.status==='approved');
+  const taskSel=document.getElementById('taskTarget');
+  taskSel.innerHTML='<option value="all">All Approved Students</option>'+approved.map(s=>`<option value="${s.id}">${s.name} (${s.email})</option>`).join('');
+  const certSel=document.getElementById('certStudent');
+  certSel.innerHTML='<option value="">Select student...</option>'+approved.map(s=>`<option value="${s.id}|${s.name}|${s.email}">${s.name} – ${s.email}</option>`).join('');
+}
+
+// COURSES
+async function loadCourses(){
+  const snap=await db.collection('courses').orderBy('createdAt','desc').get();
+  const el=document.getElementById('coursesList');
+  if(snap.empty){el.innerHTML='<p style="color:#A6A6A6;">No courses added yet.</p>';return;}
+  let h='';
+  snap.forEach(doc=>{const c=doc.data();h+=`<div style="border:1px solid #eee;border-radius:12px;padding:16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+    <div><strong>${c.name}</strong> <span class="status-badge s-approved">${c.level||''}</span><br><small style="color:#717275;">${c.duration} • ${c.fee} • ${c.description||''}</small></div>
+    <button class="btn btn-sm btn-outline-danger" onclick="deleteDoc('courses','${doc.id}',loadCourses)"><i class="bi bi-trash"></i></button>
+  </div>`;});
+  el.innerHTML=h;
+}
+async function addCourse(){
+  const name=document.getElementById('cName').value.trim();
+  const duration=document.getElementById('cDuration').value.trim();
+  const fee=document.getElementById('cFee').value.trim();
+  const level=document.getElementById('cLevel').value.trim();
+  const desc=document.getElementById('cDesc').value.trim();
+  if(!name||!duration){alert('Name and duration required.');return;}
+  await db.collection('courses').add({name,duration,fee,level,description:desc,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+  ['cName','cDuration','cFee','cLevel','cDesc'].forEach(id=>document.getElementById(id).value='');
+  loadCourses();
+}
+
+// TASKS / ASSIGNMENTS
+async function loadTasks(){
+  const snap=await db.collection('tasks').orderBy('createdAt','desc').get();
+  const el=document.getElementById('tasksList');
+  if(snap.empty){el.innerHTML='<p style="color:#A6A6A6;">No assignments yet.</p>';return;}
+  let h='';
+  snap.forEach(doc=>{const t=doc.data();
+    const targetLabel=t.target==='all'?'All Students':(allStudentsCache.find(s=>s.id===t.target)?.name||'Specific Student');
+    h+=`<div style="border:1px solid #eee;border-radius:12px;padding:16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:flex-start;">
+      <div><strong>${t.title}</strong><br><small style="color:#717275;">${t.description||''}</small><br><small style="color:#A6A6A6;">→ ${targetLabel} ${t.dueDate?'• Due: '+t.dueDate:''}</small></div>
+      <button class="btn btn-sm btn-outline-danger" onclick="deleteDoc('tasks','${doc.id}',loadTasks)"><i class="bi bi-trash"></i></button>
+    </div>`;
+  });
+  el.innerHTML=h;
+}
+async function addTask(){
+  const title=document.getElementById('taskTitle').value.trim();
+  const desc=document.getElementById('taskDesc').value.trim();
+  const target=document.getElementById('taskTarget').value;
+  const due=document.getElementById('taskDue').value;
+  if(!title||!desc){alert('Title and description required.');return;}
+  await db.collection('tasks').add({title,description:desc,target,dueDate:due||null,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+  document.getElementById('taskTitle').value='';document.getElementById('taskDesc').value='';document.getElementById('taskDue').value='';
+  loadTasks();
+}
+
+// CONTENT
+async function loadContent(){
+  const snap=await db.collection('content').orderBy('createdAt','desc').get();
+  const el=document.getElementById('contentList');
+  if(snap.empty){el.innerHTML='<p style="color:#A6A6A6;">No content yet.</p>';return;}
+  let h='';
+  snap.forEach(doc=>{const c=doc.data();
+    h+=`<div style="border:1px solid #eee;border-radius:12px;padding:16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+      <div><strong>${c.title}</strong><br><small style="color:#717275;">${c.description||''}</small><br><a href="${c.link}" target="_blank" style="font-size:13px;">${c.link}</a></div>
+      <button class="btn btn-sm btn-outline-danger" onclick="deleteDoc('content','${doc.id}',loadContent)"><i class="bi bi-trash"></i></button>
+    </div>`;
+  });
+  el.innerHTML=h;
+}
+async function addContent(){
+  const title=document.getElementById('contTitle').value.trim();
+  const link=document.getElementById('contLink').value.trim();
+  const desc=document.getElementById('contDesc').value.trim();
+  if(!title||!link){alert('Title and link required.');return;}
+  await db.collection('content').add({title,link,description:desc,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+  ['contTitle','contLink','contDesc'].forEach(id=>document.getElementById(id).value='');
+  loadContent();
+}
+
+// MEETINGS
+async function loadMeetings(){
+  const snap=await db.collection('meetings').orderBy('date','desc').get();
+  const el=document.getElementById('meetingsList');
+  if(snap.empty){el.innerHTML='<p style="color:#A6A6A6;">No classes scheduled.</p>';return;}
+  let h='';
+  const today=new Date().toISOString().split('T')[0];
+  let todayMeet=null;
+  snap.forEach(doc=>{const m=doc.data();
+    if(m.date===today)todayMeet=m;
+    h+=`<div class="meet-card"><div class="d-flex justify-content-between align-items-center">
+      <div><h6>${m.title}</h6><small style="color:#717275;">${m.date} at ${m.time}</small></div>
+      <div><a href="${m.link}" target="_blank" class="btn btn-sm btn-success me-2"><i class="bi bi-camera-video-fill"></i> Join</a>
+      <button class="btn btn-sm btn-outline-danger" onclick="deleteDoc('meetings','${doc.id}',loadMeetings)"><i class="bi bi-trash"></i></button></div>
+    </div></div>`;
+  });
+  el.innerHTML=h;
+  if(todayMeet){
+    document.getElementById('todayMeeting').innerHTML=`<h6 style="font-weight:700;">${todayMeet.title}</h6><p style="font-size:13px;color:#717275;">Today at ${todayMeet.time}</p><a href="${todayMeet.link}" target="_blank" class="btn-accent d-block text-center text-decoration-none mt-2"><i class="bi bi-camera-video-fill me-2"></i>Join Now</a>`;
+  }
+}
+async function addMeeting(){
+  const title=document.getElementById('meetTitle').value.trim();
+  const link=document.getElementById('meetLink').value.trim();
+  const date=document.getElementById('meetDate').value;
+  const time=document.getElementById('meetTime').value;
+  if(!title||!link||!date){alert('Title, link and date required.');return;}
+  await db.collection('meetings').add({title,link,date,time,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+  ['meetTitle','meetLink','meetDate'].forEach(id=>document.getElementById(id).value='');
+  loadMeetings();
+}
+
+// SUBMISSIONS
+async function loadSubmissions(){
+  const snap=await db.collection('submissions').orderBy('submittedAt','desc').get();
+  document.getElementById('st-subs').textContent=snap.size;
+  const body=document.getElementById('subsBody');
+  if(snap.empty){body.innerHTML='<tr><td colspan="5" style="color:#A6A6A6;">No submissions yet.</td></tr>';return;}
+  let h='';
+  snap.forEach(doc=>{const s=doc.data();
+    h+=`<tr><td>${s.studentName||s.studentEmail||'–'}</td><td>${s.taskTitle||'–'}</td>
+    <td>${s.link?`<a href="${s.link}" target="_blank">View Link</a>`:'–'}</td>
+    <td>${(s.text||'').substring(0,60)}</td>
+    <td>${s.submittedAt?new Date(s.submittedAt.toDate()).toLocaleDateString():''}</td></tr>`;
+  });
+  body.innerHTML=h;
+}
+
+// ANNOUNCEMENTS
+async function loadAnnouncements(){
+  const snap=await db.collection('announcements').orderBy('createdAt','desc').get();
+  const el=document.getElementById('annList');
+  if(snap.empty){el.innerHTML='<p style="color:#A6A6A6;">No announcements yet.</p>';return;}
+  let h='';
+  snap.forEach(doc=>{const a=doc.data();
+    h+=`<div class="announce-item" style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div><strong>${a.title}</strong><p style="font-size:14px;color:#717275;margin:4px 0 0;">${a.body}</p></div>
+      <button class="btn btn-sm btn-outline-danger ms-2" onclick="deleteDoc('announcements','${doc.id}',loadAnnouncements)"><i class="bi bi-trash"></i></button>
+    </div>`;
+  });
+  el.innerHTML=h;
+}
+async function addAnnouncement(){
+  const title=document.getElementById('annTitle').value.trim();
+  const body=document.getElementById('annBody').value.trim();
+  if(!title||!body){alert('Title and message required.');return;}
+  await db.collection('announcements').add({title,body,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+  document.getElementById('annTitle').value='';document.getElementById('annBody').value='';
+  loadAnnouncements();
+}
+
+// CERTIFICATES
+async function loadCerts(){
+  const snap=await db.collection('certificates').orderBy('issuedAt','desc').get();
+  const body=document.getElementById('certsBody');
+  if(snap.empty){body.innerHTML='<tr><td colspan="5" style="color:#A6A6A6;">No certificates issued yet.</td></tr>';return;}
+  let h='';
+  snap.forEach(doc=>{const c=doc.data();
+    h+=`<tr><td><code>${c.certNo}</code></td><td>${c.studentName}</td><td>${c.course}</td>
+    <td>${c.issuedAt?new Date(c.issuedAt.toDate()).toLocaleDateString():''}</td>
+    <td><a href="Helpalot-Academy-Certificate.html?id=${doc.id}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-download"></i></a></td></tr>`;
+  });
+  body.innerHTML=h;
+}
+async function issueCertificate(){
+  const val=document.getElementById('certStudent').value;
+  const course=document.getElementById('certCourse').value.trim();
+  if(!val||!course){alert('Select student and enter course name.');return;}
+  const[uid,name,email]=val.split('|');
+  const certNo='NDY-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).substring(2,5).toUpperCase();
+  await db.collection('certificates').add({uid,studentName:name,studentEmail:email,course,certNo,issuedAt:firebase.firestore.FieldValue.serverTimestamp()});
+  // also update student doc
+  await db.collection('students').doc(uid).update({certificate:certNo,certCourse:course});
+  alert(`Certificate issued!\nCertificate No: ${certNo}`);
+  loadCerts();
+}
+
+// ANALYTICS
+function renderAnalytics(){
+  const total=allStudentsCache.length;
+  const pend=allStudentsCache.filter(s=>s.status==='pending').length;
+  const appr=allStudentsCache.filter(s=>s.status==='approved').length;
+  const rej=allStudentsCache.filter(s=>s.status==='rejected').length;
+
+  document.getElementById('analyticsBreakdown').innerHTML=`
+    ${bar('Total Registrations',total,total,'#5B3DF5')}
+    ${bar('Approved Students',appr,total,'#12B8A6')}
+    ${bar('Pending Review',pend,total,'#FF8A3D')}
+    ${bar('Rejected',rej,total,'#A6A6A6')}
+  `;
+
+  const domains={};
+  allStudentsCache.forEach(s=>{if(s.domain)domains[s.domain]=(domains[s.domain]||0)+1;});
+  const domMax=Math.max(...Object.values(domains),1);
+  document.getElementById('domainAnalytics').innerHTML=Object.entries(domains).sort((a,b)=>b[1]-a[1]).map(([d,c])=>bar(d,c,domMax,'#5B3DF5')).join('');
+}
+function bar(label,val,max,color){
+  const pct=max>0?Math.round((val/max)*100):0;
+  return `<div style="margin-bottom:14px;">
+    <div class="d-flex justify-content-between mb-1"><span style="font-size:14px;font-weight:600;">${label}</span><span style="font-size:14px;color:#5B3DF5;font-weight:700;">${val}</span></div>
+    <div style="background:#f4f6f8;border-radius:100px;height:8px;"><div style="background:${color};width:${pct}%;border-radius:100px;height:100%;transition:width .6s;"></div></div>
+  </div>`;
+}
+
+// GENERIC DELETE
+async function deleteDoc(col,id,cb){
+  if(!confirm('Delete this item?'))return;
+  await db.collection(col).doc(id).delete();
+  cb();
+}
+
+// TICKETS
+async function loadTickets(){
+  const snap=await db.collection('tickets').orderBy('createdAt','desc').get();
+  const body=document.getElementById('ticketsBody');
+  if(snap.empty){body.innerHTML='<tr><td colspan="6" style="color:#A6A6A6;">No support tickets yet.</td></tr>';return;}
+  let h='';
+  snap.forEach(doc=>{const t=doc.data();
+    h+=`<tr>
+      <td>${t.studentName||'–'}<br><small style="color:#A6A6A6;">${t.studentEmail||''}</small></td>
+      <td>${t.type||'–'}</td>
+      <td><strong>${t.title}</strong></td>
+      <td>${(t.description||'').substring(0,80)}</td>
+      <td><span class="status-badge ${t.status==='resolved'?'s-approved':'s-pending'}">${t.status}</span></td>
+      <td>
+        ${t.status!=='resolved'?`<button class="btn btn-sm btn-success" onclick="resolveTicket('${doc.id}')">Resolve</button>`:'–'}
+      </td>
+    </tr>`;
+  });
+  body.innerHTML=h;
+}
+async function resolveTicket(id){
+  await db.collection('tickets').doc(id).update({status:'resolved'});
+  loadTickets();
+}
+
+// TRAINERS
+async function loadTrainers(){
+  const snap=await db.collection('trainers').get();
+  const body=document.getElementById('trainersBody');
+  if(snap.empty){body.innerHTML='<tr><td colspan="5" style="color:#A6A6A6;">No trainers added yet.</td></tr>';return;}
+  let h='';
+  snap.forEach(doc=>{const t=doc.data();
+    h+=`<tr>
+      <td><strong>${t.name}</strong></td>
+      <td>${t.email}</td>
+      <td>${t.subject}</td>
+      <td><a href="Helpalot-Academy-Trainer.html" target="_blank" class="btn btn-sm btn-outline-primary">Open Dashboard</a></td>
+      <td><button class="btn btn-sm btn-outline-danger" onclick="deleteDoc('trainers','${doc.id}',loadTrainers)"><i class="bi bi-trash"></i></button></td>
+    </tr>`;
+  });
+  body.innerHTML=h;
+}
+async function addTrainer(){
+  const name=document.getElementById('trName').value.trim();
+  const email=document.getElementById('trEmail').value.trim();
+  const subject=document.getElementById('trSubject').value.trim();
+  if(!name||!email||!subject){alert('All fields required.');return;}
+  // Store trainer doc (trainer logs in via Firebase Auth, we use email as key)
+  await db.collection('trainers').add({name,email,subject,addedAt:firebase.firestore.FieldValue.serverTimestamp()});
+  ['trName','trEmail','trSubject'].forEach(id=>document.getElementById(id).value='');
+  loadTrainers();
+  alert(`Trainer added! They can now log in at Helpalot-Academy-Trainer.html\n\nNOTE: Ask them to create a Firebase account first (use the register page or Firebase console) and share the trainer dashboard URL.`);
+}
+
+// Update loadAll to include tickets and trainers
+const origLoadAll = loadAll;
+async function loadAllFull(){await origLoadAll();loadTickets();loadTrainers();}
+// Override
+window.loadAll = loadAllFull;
+</script>
+</body></html>

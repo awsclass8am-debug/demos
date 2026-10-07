@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Dashboard – Helpalot Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/bootstrap-icons.css" rel="stylesheet">
+  <link href="css/Main-style.css" rel="stylesheet">
+<link href="css/helpalot-theme.css" rel="stylesheet">
+<link rel="icon" href="images/helpalot-icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#5B3DF5">
+  <style>
+    body{background:#f4f6f8;margin:0;}
+    /* SIDEBAR */
+    .sb{position:fixed;top:0;left:0;width:220px;height:100vh;background:linear-gradient(180deg,#14112B,#5B3DF5);overflow-y:auto;z-index:100;}
+    .sb-logo{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.12);}
+    .sb-logo img{height:32px;}
+    .sb-logo .sb-sub{color:rgba(255,255,255,.6);font-size:11px;margin-top:4px;}
+    .sb-nav{padding:12px 0;}
+    .sb-link{display:flex;align-items:center;gap:9px;padding:10px 16px;color:rgba(255,255,255,.7);font-size:13px;font-weight:600;text-decoration:none;border-left:3px solid transparent;transition:all .2s;}
+    .sb-link:hover,.sb-link.active{background:rgba(255,255,255,.13);color:#fff;border-left-color:#fff;}
+    .sb-link i{font-size:16px;width:18px;}
+    .sb-sec{padding:8px 16px 3px;color:rgba(255,255,255,.35);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;}
+    /* MAIN */
+    .main{margin-left:220px;min-height:100vh;}
+    /* TOP BAR */
+    .topbar{background:#fff;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.06);position:sticky;top:0;z-index:50;}
+    .topbar h5{margin:0;font-weight:700;font-size:16px;}
+    /* BANNER */
+    .dash-banner{background:linear-gradient(135deg,#5B3DF5,#14112B);color:#fff;padding:28px 0 76px;position:relative;}
+    .dash-banner h2{font-weight:700;margin-bottom:4px;}
+    .dash-banner p{opacity:.8;margin:0;font-size:14px;}
+    .dash-banner svg{position:absolute;bottom:-1px;left:0;width:100%;}
+    .mini-stat{background:rgba(255,255,255,.15);border-radius:12px;padding:14px;text-align:center;}
+    .mini-stat h3{font-weight:800;margin:0;font-size:22px;color:#fff;}
+    .mini-stat p{margin:0;font-size:11px;color:rgba(255,255,255,.75);}
+    /* BODY */
+    .dash-body{padding:20px 24px 50px;}
+    .d-card{background:#fff;border-radius:14px;box-shadow:0 3px 14px rgba(0,0,0,.06);padding:22px;margin-bottom:20px;}
+    .d-card h4{font-weight:700;font-size:16px;margin-bottom:16px;}
+    /* TABS */
+    .tab-pane-s{display:none;}.tab-pane-s.active{display:block;}
+    /* SKILL SCORE */
+    .score-ring{width:100px;height:100px;border-radius:50%;background:conic-gradient(#5B3DF5 var(--pct),#eee 0);display:flex;align-items:center;justify-content:center;position:relative;margin:0 auto 12px;}
+    .score-ring-inner{width:80px;height:80px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;color:#5B3DF5;font-size:20px;}
+    /* TASK / CONTENT ITEMS */
+    .t-item{border:1px solid #eee;border-radius:12px;padding:16px;margin-bottom:12px;}
+    .t-item h5{font-weight:700;font-size:15px;margin-bottom:4px;}
+    .t-item p{color:#717275;font-size:13px;margin-bottom:8px;}
+    .badge-sub{background:#E6F6EC;color:#1A7F4E;border-radius:100px;padding:3px 12px;font-size:12px;font-weight:700;}
+    .badge-pend{background:#FFF3CD;color:#8a6d3b;border-radius:100px;padding:3px 12px;font-size:12px;font-weight:700;}
+    /* LEADERBOARD */
+    .lb-row{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;margin-bottom:8px;background:#f4f6f8;}
+    .lb-row.me{background:#EFEBFF;border:1.5px solid #5B3DF5;}
+    .lb-rank{width:32px;height:32px;border-radius:50%;background:#5B3DF5;color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;min-width:32px;}
+    .lb-rank.gold{background:#FFC107;}
+    .lb-rank.silver{background:#A6A6A6;}
+    .lb-rank.bronze{background:#FF8A3D;}
+    .lb-name{flex:1;font-weight:600;font-size:14px;}
+    .lb-score{font-weight:800;color:#5B3DF5;font-size:15px;}
+    /* CALENDAR */
+    .cal-day{text-align:center;padding:8px 4px;border-radius:10px;font-size:13px;cursor:pointer;}
+    .cal-day.today{background:#5B3DF5;color:#fff;font-weight:700;}
+    .cal-day.has-event{border:2px solid #5B3DF5;color:#5B3DF5;font-weight:700;}
+    /* ANNOUNCE */
+    .ann-item{border-left:3px solid #5B3DF5;padding:10px 14px;background:#f4f6f8;border-radius:0 10px 10px 0;margin-bottom:10px;}
+    .ann-item h6{font-weight:700;margin-bottom:4px;}
+    /* SUPPORT */
+    .ticket-status{display:inline-block;padding:3px 12px;border-radius:100px;font-size:12px;font-weight:700;}
+    .ts-open{background:#EFEBFF;color:#4A2FD6;}
+    .ts-resolved{background:#E6F6EC;color:#1A7F4E;}
+    /* MODAL */
+    .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;align-items:center;justify-content:center;}
+    .modal-box{background:#fff;border-radius:16px;padding:26px;max-width:440px;width:90%;}
+    .modal-box h4{font-weight:700;margin-bottom:16px;}
+    /* CERT */
+    .cert-preview{border:3px solid #5B3DF5;border-radius:16px;padding:30px;text-align:center;background:linear-gradient(135deg,#EFEBFF,#fff);}
+    @media(max-width:991px){.sb{display:none;}.main{margin-left:0;}}
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sb" id="sidebar">
+  <div class="sb-logo">
+    <span class="hp-logo">helpalot</span>
+    <div class="sb-sub">Academy Dashboard</div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-sec">Main</div>
+    <a class="sb-link active" href="#" onclick="ST('home',this)"><i class="bi bi-grid"></i>Home</a>
+    <a class="sb-link" href="#" onclick="ST('class',this)"><i class="bi bi-camera-video"></i>Today's Class</a>
+    <a class="sb-link" href="#" onclick="ST('content',this)"><i class="bi bi-book"></i>Learning Content</a>
+
+    <div class="sb-sec">Work</div>
+    <a class="sb-link" href="#" onclick="ST('tasks',this)"><i class="bi bi-clipboard-check"></i>Assignments</a>
+    <a class="sb-link" href="#" onclick="ST('projects',this)"><i class="bi bi-kanban"></i>Projects</a>
+    <a class="sb-link" href="#" onclick="ST('internship',this)"><i class="bi bi-briefcase"></i>Internship</a>
+
+    <div class="sb-sec">Progress</div>
+    <a class="sb-link" href="#" onclick="ST('attendance',this)"><i class="bi bi-calendar-check"></i>Attendance</a>
+    <a class="sb-link" href="#" onclick="ST('certificates',this)"><i class="bi bi-award"></i>Certificate</a>
+    <a class="sb-link" href="#" onclick="ST('leaderboard',this)"><i class="bi bi-trophy"></i>Leaderboard</a>
+
+    <div class="sb-sec">More</div>
+    <a class="sb-link" href="#" onclick="ST('calendar',this)"><i class="bi bi-calendar3"></i>Calendar</a>
+    <a class="sb-link" href="#" onclick="ST('announcements',this)"><i class="bi bi-megaphone"></i>Announcements</a>
+    <a class="sb-link" href="#" onclick="ST('support',this)"><i class="bi bi-headset"></i>Support</a>
+    <a class="sb-link" href="#" onclick="ST('profile',this)"><i class="bi bi-person-circle"></i>Profile</a>
+
+    <div style="padding:16px 16px 0;">
+      <a class="sb-link" href="#" onclick="doLogout()" style="padding:8px 0;border:none;color:rgba(255,100,100,.8);"><i class="bi bi-box-arrow-left"></i>Logout</a>
+    </div>
+  </nav>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button class="d-lg-none btn btn-sm btn-outline-secondary" onclick="document.getElementById('sidebar').style.display=document.getElementById('sidebar').style.display==='block'?'none':'block'"><i class="bi bi-list"></i></button>
+      <h5 id="pageTitle">Dashboard</h5>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span id="navName" style="font-size:13px;color:#717275;"></span>
+      <span style="background:#EFEBFF;color:#5B3DF5;border-radius:100px;padding:4px 12px;font-size:12px;font-weight:700;">Student</span>
+    </div>
+  </div>
+
+  <!-- BANNER -->
+  <div class="dash-banner">
+    <div class="container-fluid" style="padding:0 24px;">
+      <div class="row align-items-center">
+        <div class="col-lg-7 col-12 mb-3 mb-lg-0">
+          <h2>Hey, <span id="welcomeName">Student</span> 👋</h2>
+          <p id="welcomeSub">Loading your profile...</p>
+        </div>
+        <div class="col-lg-5 col-12">
+          <div class="row g-2">
+            <div class="col-3"><div class="mini-stat"><h3 id="ms-tasks">–</h3><p>Tasks</p></div></div>
+            <div class="col-3"><div class="mini-stat"><h3 id="ms-done">–</h3><p>Done</p></div></div>
+            <div class="col-3"><div class="mini-stat"><h3 id="ms-attend">–</h3><p>Attend %</p></div></div>
+            <div class="col-3"><div class="mini-stat"><h3 id="ms-score">–</h3><p>Score</p></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none"><path fill="#f4f6f8" d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z"></path></svg>
+  </div>
+
+  <div class="dash-body">
+
+    <!-- HOME TAB -->
+    <div class="tab-pane-s active" id="tab-home">
+      <div class="row g-4">
+        <div class="col-lg-4 col-12">
+          <div class="d-card text-center">
+            <h4>Helpalot Skill Score</h4>
+            <div class="score-ring" id="scoreRing" style="--pct:0deg;"><div class="score-ring-inner" id="scoreText">–</div></div>
+            <p style="font-size:13px;color:#717275;">out of 1000</p>
+            <div style="font-size:12px;color:#A6A6A6;">Attendance + Tasks + Projects + Mentor</div>
+          </div>
+        </div>
+        <div class="col-lg-8 col-12">
+          <div class="d-card">
+            <h4>Today's Class</h4>
+            <div id="todayClass"><p style="color:#A6A6A6;">Loading...</p></div>
+          </div>
+          <div class="d-card">
+            <h4>Latest Announcement</h4>
+            <div id="latestAnn"><p style="color:#A6A6A6;">Loading...</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TODAY'S CLASS TAB -->
+    <div class="tab-pane-s" id="tab-class">
+      <div class="d-card">
+        <h4><i class="bi bi-camera-video me-2" style="color:#5B3DF5;"></i>Live Classes</h4>
+        <p style="color:#717275;font-size:14px;">Classes happen daily at 7:00 PM. Join using the link below. Attendance is auto-marked when you join.</p>
+        <div id="allMeetings"><p style="color:#A6A6A6;">Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- LEARNING CONTENT TAB -->
+    <div class="tab-pane-s" id="tab-content">
+      <div class="d-card">
+        <h4><i class="bi bi-book me-2" style="color:#5B3DF5;"></i>Learning Content</h4>
+        <p style="color:#717275;font-size:14px;">Videos, notes, and resources shared by your trainer.</p>
+        <div id="contentList"><p style="color:#A6A6A6;">Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- ASSIGNMENTS TAB -->
+    <div class="tab-pane-s" id="tab-tasks">
+      <div class="d-card">
+        <h4><i class="bi bi-clipboard-check me-2" style="color:#5B3DF5;"></i>Assignments & Tasks</h4>
+        <div id="taskList"><p style="color:#A6A6A6;">Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- PROJECTS TAB -->
+    <div class="tab-pane-s" id="tab-projects">
+      <div class="d-card">
+        <h4><i class="bi bi-kanban me-2" style="color:#5B3DF5;"></i>Project Board</h4>
+        <div class="row g-3" id="projectBoard">
+          <div class="col-lg-3 col-6"><div style="background:#FFF3CD;border-radius:12px;padding:14px;"><strong style="font-size:13px;">📋 Pending</strong><div id="proj-pending" class="mt-2"></div></div></div>
+          <div class="col-lg-3 col-6"><div style="background:#EFEBFF;border-radius:12px;padding:14px;"><strong style="font-size:13px;">⚙️ In Progress</strong><div id="proj-progress" class="mt-2"></div></div></div>
+          <div class="col-lg-3 col-6"><div style="background:#f4f6f8;border-radius:12px;padding:14px;"><strong style="font-size:13px;">👀 In Review</strong><div id="proj-review" class="mt-2"></div></div></div>
+          <div class="col-lg-3 col-6"><div style="background:#E6F6EC;border-radius:12px;padding:14px;"><strong style="font-size:13px;">✅ Completed</strong><div id="proj-done" class="mt-2"></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTERNSHIP TAB -->
+    <div class="tab-pane-s" id="tab-internship">
+      <div class="d-card">
+        <h4><i class="bi bi-briefcase me-2" style="color:#5B3DF5;"></i>Internship Timeline</h4>
+        <p style="color:#717275;font-size:14px;">Your internship journey — weekly milestones and tasks.</p>
+        <div id="internshipTimeline">
+          <div style="position:relative;padding-left:28px;">
+            <div style="position:absolute;left:8px;top:0;bottom:0;width:2px;background:#eee;"></div>
+            <div id="timelineItems"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ATTENDANCE TAB -->
+    <div class="tab-pane-s" id="tab-attendance">
+      <div class="row g-4">
+        <div class="col-lg-4 col-12">
+          <div class="d-card text-center">
+            <h4>Attendance Overview</h4>
+            <div style="font-size:56px;font-weight:800;color:#5B3DF5;" id="attendPct">–%</div>
+            <p style="color:#717275;font-size:14px;">Overall attendance rate</p>
+            <div style="background:#f4f6f8;border-radius:100px;height:12px;margin-top:10px;">
+              <div id="attendBar" style="background:linear-gradient(90deg,#5B3DF5,#12B8A6);width:0%;border-radius:100px;height:100%;transition:width .8s;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-8 col-12">
+          <div class="d-card">
+            <h4>Attendance Log</h4>
+            <div id="attendLog"><p style="color:#A6A6A6;font-size:14px;">Attendance is marked automatically when you join each live class. Join every class to maintain 100% attendance.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CERTIFICATE TAB -->
+    <div class="tab-pane-s" id="tab-certificates">
+      <div class="d-card">
+        <h4><i class="bi bi-award me-2" style="color:#5B3DF5;"></i>Certificate</h4>
+        <div id="certSection">
+          <div style="text-align:center;padding:30px;">
+            <div style="font-size:64px;margin-bottom:16px;">🏆</div>
+            <h5 style="font-weight:700;">Complete your program to earn your certificate</h5>
+            <p style="color:#717275;">Certificate is auto-generated by admin once you complete all requirements.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD TAB -->
+    <div class="tab-pane-s" id="tab-leaderboard">
+      <div class="d-card">
+        <h4><i class="bi bi-trophy me-2" style="color:#5B3DF5;"></i>Leaderboard</h4>
+        <p style="color:#717275;font-size:14px;">Top students ranked by Helpalot Skill Score. Keep completing tasks and attending classes to climb the board.</p>
+        <div id="leaderboardList"><p style="color:#A6A6A6;">Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- CALENDAR TAB -->
+    <div class="tab-pane-s" id="tab-calendar">
+      <div class="d-card">
+        <h4><i class="bi bi-calendar3 me-2" style="color:#5B3DF5;"></i>Calendar</h4>
+        <div id="calendarView"></div>
+        <div id="calEvents" class="mt-4"></div>
+      </div>
+    </div>
+
+    <!-- ANNOUNCEMENTS TAB -->
+    <div class="tab-pane-s" id="tab-announcements">
+      <div class="d-card">
+        <h4><i class="bi bi-megaphone me-2" style="color:#5B3DF5;"></i>Announcements</h4>
+        <div id="annList"><p style="color:#A6A6A6;">Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- SUPPORT TAB -->
+    <div class="tab-pane-s" id="tab-support">
+      <div class="row g-4">
+        <div class="col-lg-6 col-12">
+          <div class="d-card">
+            <h4>Raise Support Ticket</h4>
+            <div class="row g-2">
+              <div class="col-12">
+                <select class="form-control" id="ticketType">
+                  <option value="" disabled selected>Issue category</option>
+                  <option>Technical Issue</option><option>Payment</option>
+                  <option>Course Content</option><option>Certificate</option>
+                  <option>Placement</option><option>Other</option>
+                </select>
+              </div>
+              <div class="col-12"><input class="form-control" id="ticketTitle" placeholder="Brief issue title *"></div>
+              <div class="col-12"><textarea class="form-control" id="ticketDesc" rows="4" placeholder="Describe your issue in detail..."></textarea></div>
+              <div class="col-12"><button class="btn custom-btn w-100" onclick="raiseTicket()">Submit Ticket</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 col-12">
+          <div class="d-card">
+            <h4>My Tickets</h4>
+            <div id="ticketList"><p style="color:#A6A6A6;font-size:14px;">No tickets raised yet.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE TAB -->
+    <div class="tab-pane-s" id="tab-profile">
+      <div class="row g-4">
+        <div class="col-lg-4 col-12">
+          <div class="d-card text-center">
+            <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#5B3DF5,#14112B);display:flex;align-items:center;justify-content:center;font-size:32px;color:#fff;margin:0 auto 14px;" id="profileAvatar">👤</div>
+            <h5 id="profileName" style="font-weight:700;"></h5>
+            <p id="profileDomain" style="color:#5B3DF5;font-size:14px;font-weight:600;"></p>
+            <p id="profileCollege" style="color:#717275;font-size:13px;"></p>
+            <span id="profileStatus" class="status-badge" style="padding:4px 14px;border-radius:100px;font-size:12px;font-weight:700;"></span>
+          </div>
+        </div>
+        <div class="col-lg-8 col-12">
+          <div class="d-card">
+            <h4>Profile Details</h4>
+            <table class="table" style="font-size:14px;"><tbody id="profileTable"></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- dash-body -->
+</div><!-- main -->
+
+<!-- Submit Modal -->
+<div class="modal-bg" id="submitModal">
+  <div class="modal-box">
+    <h4 id="modalTitle">Submit Task</h4>
+    <label style="font-weight:600;font-size:13px;display:block;margin-bottom:6px;">Submission Link (GitHub / Drive URL)</label>
+    <input class="form-control mb-3" id="subLink" placeholder="https://...">
+    <label style="font-weight:600;font-size:13px;display:block;margin-bottom:6px;">Notes / Explanation</label>
+    <textarea class="form-control mb-3" id="subNotes" rows="3" placeholder="Brief description of your work..."></textarea>
+    <div class="d-flex gap-2">
+      <button class="btn custom-btn" onclick="confirmSub()">Submit</button>
+      <button class="btn btn-outline-secondary" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/jquery.min.js"></script><script src="js/bootstrap.bundle.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig={apiKey:"AIzaSyDoaJ4fOXZHWqKYlTo9nCf-Dy6IEwCvXKg",authDomain:"ndyo-intrenship.firebaseapp.com",projectId:"ndyo-intrenship",storageBucket:"ndyo-intrenship.firebasestorage.app",messagingSenderId:"1053500008575",appId:"1:1053500008575:web:4c599d68a06eaf09c7374a"};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(),db=firebase.firestore();
+
+let CU=null,CS=null,mySubs={},activeTaskId=null,activeTaskTitle='';
+
+auth.onAuthStateChanged(async user=>{
+  if(!user){window.location.href='Helpalot-Academy-Login.html';return;}
+  CU=user;
+  const snap=await db.collection('students').doc(user.uid).get();
+  if(!snap.exists||snap.data().status!=='approved'){await auth.signOut();window.location.href='Helpalot-Academy-Login.html';return;}
+  CS=snap.data();
+  initDashboard();
+});
+
+function doLogout(){auth.signOut().then(()=>window.location.href='Helpalot-Academy-Login.html');}
+
+function ST(name,el){
+  document.querySelectorAll('.tab-pane-s').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(el)el.classList.add('active');
+  const titles={home:'Dashboard',class:"Today's Class",content:'Learning Content',tasks:'Assignments',projects:'Projects',internship:'Internship',attendance:'Attendance',certificates:'Certificate',leaderboard:'Leaderboard',calendar:'Calendar',announcements:'Announcements',support:'Support',profile:'Profile'};
+  document.getElementById('pageTitle').textContent=titles[name]||name;
+  return false;
+}
+
+async function initDashboard(){
+  document.getElementById('welcomeName').textContent=CS.name;
+  document.getElementById('navName').textContent=CS.name;
+  document.getElementById('welcomeSub').textContent=`${CS.domain} • ${CS.college}`;
+
+  // Skill score
+  const score=CS.skillScore||0;
+  document.getElementById('scoreText').textContent=score;
+  document.getElementById('ms-score').textContent=score;
+  const deg=Math.round((score/1000)*360);
+  document.getElementById('scoreRing').style.setProperty('--pct',deg+'deg');
+  document.getElementById('scoreRing').style.background=`conic-gradient(#5B3DF5 ${deg}deg,#eee 0)`;
+
+  await loadSubs();
+  loadContent(); loadTasks(); loadMeetings(); loadAnnouncements(); loadLeaderboard(); loadCerts(); buildCalendar(); loadProfile();
+
+  // Fake internship timeline
+  buildTimeline();
+  // Fake project board
+  buildProjects();
+}
+
+async function loadSubs(){
+  const snap=await db.collection('submissions').where('uid','==',CU.uid).get();
+  mySubs={};snap.forEach(d=>{const s=d.data();mySubs[s.taskId]=s;});
+  document.getElementById('ms-done').textContent=snap.size;
+}
+
+async function loadContent(){
+  const snap=await db.collection('content').orderBy('createdAt','desc').get();
+  const el=document.getElementById('contentList');
+  if(snap.empty){el.innerHTML='<p style="color:#A6A6A6;font-size:14px;">No content added yet. Check back soon!</p>';return;}
+  let h='';
+  snap.forEach(doc=>{const c=doc.data();
+    const isVideo=c.link&&(c.link.includes('youtube')||c.link.includes('youtu.be'));
+    const icon=isVideo?'bi-play-circle-fill':'bi-file-earmark-text-fill';
+    const color=isVideo?'#FF8A3D':'#5B3DF5';
+    h+=`<div class="t-item"><div class="d-flex gap-3 align-items-start">
+      <div style="width:40px;height:40px;background:#EFEBFF;border-radius:10px;display:flex;align-items:center;justify-content:center;min-width:40px;font-size:18px;color:${color};"><i class="bi ${icon}"></i></div>
+      <div><h5>${c.title}</h5><p>${c.description||''}</p><a href="${c.link}" target="_blank" class="btn btn-sm" style="background:#5B3DF5;color:#fff;border-radius:8px;font-size:13px;padding:5px 14px;">${isVideo?'▶ Watch':'📄 Open'}</a></div>
+    </div></div>`;
+  });
+  el.innerHTML=h;
+}
+
+async function loadTasks(){
+  const [allSnap,mySnap]=await Promise.all([
+    db.collection('tasks').where('target','==','all').get(),
+    db.collection('tasks').where('target','==',CU.uid).get()
+  ]);
+  const tasks=[];
+  allSnap.forEach(d=>tasks.push({id:d.id,...d.data()}));
+  mySnap.forEach(d=>tasks.push({id:d.id,...d.data()}));
+  tasks.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+  document.getElementById('ms-tasks').textContent=tasks.length;
+  const el=document.getElementById('taskList');
+  if(!tasks.length){el.innerHTML='<p style="color:#A6A6A6;font-size:14px;">No assignments yet. Check back soon!</p>';return;}
+  let h='';
+  tasks.forEach(t=>{
+    const done=mySubs[t.id];
+    h+=`<div class="t-item">
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+        <div><h5>${t.title}</h5><p>${t.description}</p>${t.dueDate?`<small style="color:#A6A6A6;"><i class="bi bi-calendar3 me-1"></i>Due: ${t.dueDate}</small>`:''}</div>
+        <div>${done?`<span class="badge-sub"><i class="bi bi-check-circle me-1"></i>Submitted</span>${done.link?` <a href="${done.link}" target="_blank" style="font-size:12px;color:#5B3DF5;"> View</a>`:''}`
+        :`<button class="btn btn-sm" style="background:#5B3DF5;color:#fff;border-radius:8px;font-size:13px;padding:6px 14px;" onclick="openSub('${t.id}','${t.title.replace(/'/g,"\\'")}')"><i class="bi bi-upload me-1"></i>Submit</button>`}</div>
+      </div>
+    </div>`;
+  });
+  el.innerHTML=h;
+}
+
+async function loadMeetings(){
+  const today=new Date().toISOString().split('T')[0];
+  const snap=await db.collection('meetings').orderBy('date','asc').get();
+  let h='',todayH='<p style="color:#A6A6A6;font-size:14px;">No class scheduled for today. Check the class schedule below.</p>';
+  snap.forEach(doc=>{const m=doc.data();
+    const isToday=m.date===today;
+    const past=m.date<today;
+    const chip=isToday?'<span style="background:#E6F6EC;color:#1A7F4E;border-radius:100px;padding:2px 10px;font-size:11px;font-weight:700;margin-left:8px;">TODAY</span>':'';
+    h+=`<div class="t-item" style="${past?'opacity:.5;':''}">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div><h5>${m.title}${chip}</h5><small style="color:#717275;"><i class="bi bi-calendar3 me-1"></i>${m.date} at ${m.time}</small></div>
+        ${!past?`<a href="${m.link}" target="_blank" class="btn btn-sm" style="background:#5B3DF5;color:#fff;border-radius:8px;font-size:13px;padding:6px 14px;"><i class="bi bi-camera-video-fill me-1"></i>Join Class</a>`:'<span style="font-size:12px;color:#A6A6A6;">Completed</span>'}
+      </div>
+    </div>`;
+    if(isToday)todayH=`<h5 style="font-weight:700;">${m.title}</h5><p style="font-size:13px;color:#717275;">Today at ${m.time}</p><a href="${m.link}" target="_blank" class="btn custom-btn" style="font-size:13px;padding:8px 20px;"><i class="bi bi-camera-video-fill me-2"></i>Join Now</a>`;
+  });
+  document.getElementById('allMeetings').innerHTML=h||'<p style="color:#A6A6A6;font-size:14px;">No classes scheduled yet.</p>';
+  document.getElementById('todayClass').innerHTML=todayH;
+}
+
+async function loadAnnouncements(){
+  const snap=await db.collection('announcements').orderBy('createdAt','desc').get();
+  const el=document.getElementById('annList');
+  let latestH='<p style="color:#A6A6A6;font-size:14px;">No announcements yet.</p>';
+  if(!snap.empty){
+    let h='';
+    snap.forEach(doc=>{const a=doc.data();h+=`<div class="ann-item"><h6>${a.title}</h6><p style="color:#717275;font-size:14px;margin:0;">${a.body}</p></div>`;});
+    el.innerHTML=h;
+    const first=snap.docs[0].data();
+    latestH=`<div class="ann-item"><h6>${first.title}</h6><p style="color:#717275;font-size:13px;margin:0;">${first.body.substring(0,100)}...</p></div>`;
+  }else{el.innerHTML=latestH;}
+  document.getElementById('latestAnn').innerHTML=latestH;
+}
+
+async function loadLeaderboard(){
+  const snap=await db.collection('students').where('status','==','approved').orderBy('skillScore','desc').limit(10).get();
+  const el=document.getElementById('leaderboardList');
+  if(snap.empty){el.innerHTML='<p style="color:#A6A6A6;">No data yet.</p>';return;}
+  let h='',rank=1;
+  snap.forEach(doc=>{
+    const s=doc.data();
+    const isMe=doc.id===CU.uid;
+    const rankClass=rank===1?'gold':rank===2?'silver':rank===3?'bronze':'';
+    h+=`<div class="lb-row${isMe?' me':''}">
+      <div class="lb-rank${rankClass?' '+rankClass:''}">${rank}</div>
+      <div class="lb-name">${s.name} ${isMe?'<span style="font-size:11px;color:#5B3DF5;">(You)</span>':''}</div>
+      <div style="font-size:12px;color:#A6A6A6;margin-right:12px;">${s.domain||''}</div>
+      <div class="lb-score">${s.skillScore||0}</div>
+    </div>`;
+    rank++;
+  });
+  el.innerHTML=h;
+}
+
+async function loadCerts(){
+  const snap=await db.collection('certificates').where('uid','==',CU.uid).get();
+  const el=document.getElementById('certSection');
+  if(snap.empty)return;
+  const c=snap.docs[0].data();
+  el.innerHTML=`<div class="cert-preview">
+    <div style="font-size:48px;margin-bottom:12px;">🏅</div>
+    <h4 style="font-weight:800;color:#5B3DF5;margin-bottom:4px;">Helpalot Academy</h4>
+    <p style="font-size:13px;color:#717275;margin-bottom:16px;">Certificate of Completion</p>
+    <h3 style="font-weight:800;margin-bottom:4px;">${c.studentName}</h3>
+    <p style="color:#717275;margin-bottom:8px;">has successfully completed</p>
+    <h5 style="font-weight:700;color:#14112B;">${c.course}</h5>
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid #ddd;">
+      <code style="font-size:12px;color:#5B3DF5;">${c.certNo}</code>
+    </div>
+  </div>`;
+}
+
+function loadProfile(){
+  document.getElementById('profileName').textContent=CS.name;
+  document.getElementById('profileDomain').textContent=CS.domain;
+  document.getElementById('profileCollege').textContent=CS.college;
+  document.getElementById('profileAvatar').textContent=CS.name[0].toUpperCase();
+  const statusColors={approved:'background:#E6F6EC;color:#1A7F4E;',pending:'background:#FFF3CD;color:#8a6d3b;',rejected:'background:#FDE8E8;color:#C53030;'};
+  const st=document.getElementById('profileStatus');
+  st.textContent=CS.status;st.style.cssText=statusColors[CS.status]||'';
+  const fields=[['Email',CS.email],['Phone',CS.phone||'–'],['College',CS.college||'–'],['Degree',CS.degree||'–'],['Year',CS.year||'–'],['Domain / Track',CS.domain],['Skills',CS.skills||'–'],['LinkedIn',CS.linkedin?`<a href="${CS.linkedin}" target="_blank">${CS.linkedin}</a>`:'–'],['GitHub',CS.github?`<a href="${CS.github}" target="_blank">${CS.github}</a>`:'–'],['Helpalot Skill Score',CS.skillScore||0]];
+  document.getElementById('profileTable').innerHTML=fields.map(([k,v])=>`<tr><td style="color:#717275;width:140px;font-weight:600;">${k}</td><td>${v}</td></tr>`).join('');
+  document.getElementById('ms-attend').textContent='90%'; // placeholder
+  document.getElementById('attendPct').textContent='90%';
+  document.getElementById('attendBar').style.width='90%';
+}
+
+function buildTimeline(){
+  const weeks=['Week 1: Orientation & Environment Setup','Week 2: Fundamentals & First Task','Week 3: Core Concepts','Week 4: Hands-on Project Begin','Week 5-8: Build & Iterate','Week 9-12: Advanced Topics','Week 13-16: Real Client Project','Week 17-20: Mentorship & Review','Week 21-24: Final Project & Presentation'];
+  let h='';
+  weeks.forEach((w,i)=>{
+    const done=i<3;
+    h+=`<div style="position:relative;margin-bottom:18px;padding-left:20px;">
+      <div style="position:absolute;left:-18px;top:2px;width:14px;height:14px;border-radius:50%;background:${done?'#5B3DF5':'#ddd'};border:2px solid ${done?'#5B3DF5':'#ddd'};"></div>
+      <strong style="font-size:14px;color:${done?'#14112B':'#A6A6A6'};">${w}</strong>
+      ${done?'<span style="display:inline-block;margin-left:8px;background:#E6F6EC;color:#1A7F4E;border-radius:100px;padding:1px 10px;font-size:11px;font-weight:700;">✓ Done</span>':''}
+    </div>`;
+  });
+  document.getElementById('timelineItems').innerHTML=h;
+}
+
+function buildProjects(){
+  const projects=[{title:'Environment Setup',status:'done'},{title:'Portfolio Website',status:'progress'},{title:'API Integration',status:'pending'},{title:'Final Capstone',status:'pending'}];
+  ['pending','progress','review','done'].forEach(s=>{document.getElementById('proj-'+s).innerHTML='';});
+  projects.forEach(p=>{
+    const el=document.getElementById('proj-'+p.status);
+    if(el)el.innerHTML+=`<div style="background:#fff;border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:13px;font-weight:600;">${p.title}</div>`;
+  });
+}
+
+function buildCalendar(){
+  const now=new Date();
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const today=now.getDate();
+  const firstDay=new Date(now.getFullYear(),now.getMonth(),1).getDay();
+  const daysInMonth=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+  let h=`<h5 style="font-weight:700;margin-bottom:14px;">${months[now.getMonth()]} ${now.getFullYear()}</h5>`;
+  h+='<div class="row g-1 mb-1">'+days.map(d=>`<div class="col text-center" style="font-size:11px;font-weight:700;color:#A6A6A6;">${d}</div>`).join('')+'</div>';
+  h+='<div class="row g-1">';
+  for(let i=0;i<firstDay;i++)h+='<div class="col"></div>';
+  for(let d=1;d<=daysInMonth;d++){
+    const isToday=d===today;
+    h+=`<div class="col cal-day${isToday?' today':''}${[5,12,19,26].includes(d)?' has-event':''}">${d}</div>`;
+  }
+  h+='</div>';
+  document.getElementById('calendarView').innerHTML=h;
+  document.getElementById('calEvents').innerHTML='<p style="color:#717275;font-size:13px;margin-top:14px;"><span style="display:inline-block;width:12px;height:12px;background:#5B3DF5;border-radius:3px;margin-right:6px;"></span>Highlighted dates = live class days</p>';
+}
+
+// Submit task
+function openSub(id,title){activeTaskId=id;activeTaskTitle=title;document.getElementById('modalTitle').textContent='Submit: '+title;document.getElementById('subLink').value='';document.getElementById('subNotes').value='';document.getElementById('submitModal').style.display='flex';}
+function closeModal(){document.getElementById('submitModal').style.display='none';}
+async function confirmSub(){
+  const link=document.getElementById('subLink').value.trim();
+  const notes=document.getElementById('subNotes').value.trim();
+  if(!link&&!notes){alert('Add a link or notes before submitting.');return;}
+  await db.collection('submissions').add({taskId:activeTaskId,taskTitle:activeTaskTitle,uid:CU.uid,studentName:CS.name,studentEmail:CS.email,link,text:notes,submittedAt:firebase.firestore.FieldValue.serverTimestamp()});
+  closeModal();
+  await loadSubs();loadTasks();
+}
+
+// Support tickets
+async function raiseTicket(){
+  const type=document.getElementById('ticketType').value;
+  const title=document.getElementById('ticketTitle').value.trim();
+  const desc=document.getElementById('ticketDesc').value.trim();
+  if(!title||!desc){alert('Title and description required.');return;}
+  await db.collection('tickets').add({uid:CU.uid,studentName:CS.name,studentEmail:CS.email,type,title,description:desc,status:'open',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+  document.getElementById('ticketTitle').value='';document.getElementById('ticketDesc').value='';
+  loadTickets();alert('Ticket submitted! Our support team will respond within 24 hours.');
+}
+async function loadTickets(){
+  const snap=await db.collection('tickets').where('uid','==',CU.uid).orderBy('createdAt','desc').get();
+  const el=document.getElementById('ticketList');
+  if(snap.empty){el.innerHTML='<p style="color:#A6A6A6;font-size:14px;">No tickets yet.</p>';return;}
+  let h='';
+  snap.forEach(doc=>{const t=doc.data();h+=`<div style="border:1px solid #eee;border-radius:10px;padding:12px;margin-bottom:10px;"><div class="d-flex justify-content-between"><strong style="font-size:14px;">${t.title}</strong><span class="ticket-status ts-${t.status}">${t.status}</span></div><small style="color:#717275;">${t.type}</small></div>`;});
+  el.innerHTML=h;
+}
+</script>
+</body></html>

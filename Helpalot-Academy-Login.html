@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Login – Helpalot Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/bootstrap-icons.css" rel="stylesheet">
+  <link href="css/Main-style.css" rel="stylesheet">
+<link href="css/helpalot-theme.css" rel="stylesheet">
+<link rel="icon" href="images/helpalot-icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#5B3DF5">
+</head>
+<body>
+<main>
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="index.html"><span class="hp-logo">helpalot</span><span class="navbar-brand-text"><small></small></span></a>
+    <div class="d-lg-none ms-auto me-3"><a class="btn custom-btn" href="Helpalot-Academy-Register.html">Apply</a></div>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-lg-auto">
+        <li class="nav-item"><a class="nav-link" href="Helpalot-Academy.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="Helpalot-Academy-Programs.html">Programs</a></li>
+        <li class="nav-item"><a class="nav-link active" href="Helpalot-Academy-Login.html">Student Login</a></li>
+        <li class="nav-item"><a class="nav-link" href="Helpalot-Academy-Register.html">Apply Now</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section class="hero-section hero-50 d-flex justify-content-center align-items-center" style="background-image:url('images/index.jpg');">
+  <div class="section-overlay"></div>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#ffffff" fill-opacity="1" d="M0,224L34.3,192C68.6,160,137,96,206,90.7C274.3,85,343,139,411,144C480,149,549,107,617,122.7C685.7,139,754,213,823,240C891.4,267,960,245,1029,224C1097.1,203,1166,181,1234,160C1302.9,139,1371,117,1406,106.7L1440,96L1440,0L1405.7,0C1371.4,0,1303,0,1234,0C1165.7,0,1097,0,1029,0C960,0,891,0,823,0C754.3,0,686,0,617,0C548.6,0,480,0,411,0C342.9,0,274,0,206,0C137.1,0,69,0,34,0L0,0Z"></path></svg>
+  <div class="container"><div class="row"><div class="col-lg-6 col-12">
+    <h2 class="text-white">Helpalot Academy</h2>
+    <h1 class="text-white mb-3">Student Login</h1>
+    <p class="text-white">Access your live classes, assignments, projects and more.</p>
+  </div></div></div>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#f4f6f8" fill-opacity="1" d="M0,224L34.3,192C68.6,160,137,96,206,90.7C274.3,85,343,139,411,144C480,149,549,107,617,122.7C685.7,139,754,213,823,240C891.4,267,960,245,1029,224C1097.1,203,1166,181,1234,160C1302.9,139,1371,117,1406,106.7L1440,96L1440,320L1405.7,320C1371.4,320,1303,320,1234,320C1165.7,320,1097,320,1029,320C960,320,891,320,823,320C754.3,320,686,320,617,320C548.6,320,480,320,411,320C342.9,320,274,320,206,320C137.1,320,69,320,34,320L0,320Z"></path></svg>
+</section>
+
+<section class="career-section section-padding" style="background:#f4f6f8;">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-5 col-12 mb-5 mb-lg-0">
+        <h3>Welcome Back!</h3>
+        <p style="color:#717275;">Login to access your Helpalot Academy dashboard with:</p>
+        <ul style="color:#717275;line-height:2.4;list-style:none;padding:0;">
+          <li><i class="bi bi-camera-video-fill me-2" style="color:#5B3DF5;"></i>Today's live class link</li>
+          <li><i class="bi bi-clipboard-check-fill me-2" style="color:#5B3DF5;"></i>Assignments & tasks</li>
+          <li><i class="bi bi-book-fill me-2" style="color:#5B3DF5;"></i>Learning content & recordings</li>
+          <li><i class="bi bi-kanban-fill me-2" style="color:#5B3DF5;"></i>Project board</li>
+          <li><i class="bi bi-award-fill me-2" style="color:#5B3DF5;"></i>Certificate status</li>
+          <li><i class="bi bi-graph-up me-2" style="color:#5B3DF5;"></i>Helpalot Skill Score</li>
+          <li><i class="bi bi-trophy-fill me-2" style="color:#5B3DF5;"></i>Leaderboard</li>
+        </ul>
+        <p class="mt-3">Not registered? <a href="Helpalot-Academy-Register.html" style="color:#5B3DF5;font-weight:700;">Apply here →</a></p>
+        <p><a href="Helpalot-Academy-Admin-Login.html" style="font-size:13px;color:#A6A6A6;">Admin login</a></p>
+      </div>
+      <div class="col-lg-5 col-12">
+        <div class="career-card">
+          <div id="msgErr" style="display:none;padding:12px 16px;background:#FDE8E8;color:#C53030;border-radius:10px;font-size:14px;margin-bottom:16px;"></div>
+          <div id="msgInfo" style="display:none;padding:12px 16px;background:#EFEBFF;color:#4A2FD6;border-radius:10px;font-size:14px;margin-bottom:16px;"></div>
+          <div id="msgOk" style="display:none;padding:12px 16px;background:#E6F6EC;color:#1A7F4E;border-radius:10px;font-size:14px;margin-bottom:16px;"></div>
+          <div class="row">
+            <div class="col-12 mb-3"><input type="email" id="eml" class="form-control" placeholder="Email Address *" required></div>
+            <div class="col-12 mb-3">
+              <div style="position:relative;">
+                <input type="password" id="pwd" class="form-control" placeholder="Password *" required>
+                <span onclick="togglePwd()" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;color:#A6A6A6;"><i class="bi bi-eye" id="eyeIcon"></i></span>
+              </div>
+            </div>
+            <div class="col-12"><button type="button" onclick="doLogin()" id="loginBtn" class="btn custom-btn w-100">Login to Dashboard</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer">
+  <p style="text-align:center;padding:20px 0;">© 2026 Helpalot Academy. All rights reserved.</p>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#A6A6A6" d="M0,224L34.3,192C68.6,160,137,96,206,90.7C274.3,85,343,139,411,144C480,149,549,107,617,122.7C685.7,139,754,213,823,240C891.4,267,960,245,1029,224C1097.1,203,1166,181,1234,160C1302.9,139,1371,117,1406,106.7L1440,96L1440,320L1405.7,320C1371.4,320,1303,320,1234,320C1165.7,320,1097,320,1029,320C960,320,891,320,823,320C754.3,320,686,320,617,320C548.6,320,480,320,411,320C342.9,320,274,320,206,320C137.1,320,69,320,34,320L0,320Z"></path></svg>
+</footer>
+
+<script src="js/jquery.min.js"></script><script src="js/bootstrap.bundle.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig={apiKey:"AIzaSyDoaJ4fOXZHWqKYlTo9nCf-Dy6IEwCvXKg",authDomain:"ndyo-intrenship.firebaseapp.com",projectId:"ndyo-intrenship",storageBucket:"ndyo-intrenship.firebasestorage.app",messagingSenderId:"1053500008575",appId:"1:1053500008575:web:4c599d68a06eaf09c7374a"};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(),db=firebase.firestore();
+function togglePwd(){const i=document.getElementById('pwd');i.type=i.type==='password'?'text':'password';document.getElementById('eyeIcon').className=i.type==='text'?'bi bi-eye-slash':'bi bi-eye';}
+function showMsg(id,msg){['msgErr','msgInfo','msgOk'].forEach(x=>document.getElementById(x).style.display='none');if(id){const el=document.getElementById(id);el.textContent=msg;el.style.display='block';}}
+async function doLogin(){
+  const email=document.getElementById('eml').value.trim(),pass=document.getElementById('pwd').value;
+  const btn=document.getElementById('loginBtn');
+  if(!email||!pass){showMsg('msgErr','Please enter your email and password.');return;}
+  btn.disabled=true;btn.textContent='Logging in...';
+  try{
+    const cred=await auth.signInWithEmailAndPassword(email,pass);
+    const snap=await db.collection('students').doc(cred.user.uid).get();
+    if(!snap.exists){await auth.signOut();showMsg('msgErr','No application found. Please register first.');return;}
+    const data=snap.data();
+    if(data.status==='pending'){await auth.signOut();showMsg('msgInfo','⏳ Your application is under review. Please wait for admin approval.');return;}
+    if(data.status==='rejected'){await auth.signOut();showMsg('msgErr','Your application was not approved. Contact academy@helpalot.help for details.');return;}
+    showMsg('msgOk','✅ Login successful! Redirecting to your dashboard...');
+    setTimeout(()=>{window.location.href='Helpalot-Academy-Dashboard.html';},1200);
+  }catch(e){showMsg('msgErr',e.message);}
+  finally{btn.disabled=false;btn.textContent='Login to Dashboard';}
+}
+document.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+let lS=0;const nv=document.querySelector('.navbar');window.addEventListener('scroll',()=>{let c=window.pageYOffset;if(c>lS){nv.classList.add('hide');nv.classList.remove('show');}else{nv.classList.add('show');nv.classList.remove('hide');}lS=c;});
+</script>
+</body></html>

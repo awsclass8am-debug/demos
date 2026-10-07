@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trainer Dashboard – Helpalot Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/bootstrap-icons.css" rel="stylesheet">
+  <link href="css/Main-style.css" rel="stylesheet">
+<link href="css/helpalot-theme.css" rel="stylesheet">
+<link rel="icon" href="images/helpalot-icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#5B3DF5">
+  <style>
+    body{background:#f4f6f8;}
+    .sb{position:fixed;top:0;left:0;width:220px;height:100vh;background:linear-gradient(180deg,#12B8A6,#14112B);overflow-y:auto;z-index:100;}
+    .sb-logo{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.12);}
+    .sb-logo img{height:32px;}
+    .sb-sub{color:rgba(255,255,255,.6);font-size:11px;margin-top:4px;}
+    .sb-nav{padding:12px 0;}
+    .sb-link{display:flex;align-items:center;gap:9px;padding:10px 16px;color:rgba(255,255,255,.7);font-size:13px;font-weight:600;text-decoration:none;border-left:3px solid transparent;transition:all .2s;}
+    .sb-link:hover,.sb-link.active{background:rgba(255,255,255,.13);color:#fff;border-left-color:#fff;}
+    .sb-link i{font-size:16px;width:18px;}
+    .sb-sec{padding:8px 16px 3px;color:rgba(255,255,255,.35);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;}
+    .main{margin-left:220px;min-height:100vh;}
+    .topbar{background:#fff;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.06);position:sticky;top:0;z-index:50;}
+    .topbar h5{margin:0;font-weight:700;}
+    .dash-banner{background:linear-gradient(135deg,#12B8A6,#14112B);color:#fff;padding:28px 24px 76px;position:relative;}
+    .dash-banner svg{position:absolute;bottom:-1px;left:0;width:100%;}
+    .body{padding:20px 24px 50px;}
+    .d-card{background:#fff;border-radius:14px;box-shadow:0 3px 14px rgba(0,0,0,.06);padding:22px;margin-bottom:20px;}
+    .d-card h4{font-weight:700;font-size:16px;margin-bottom:16px;}
+    .tab-pane-t{display:none;}.tab-pane-t.active{display:block;}
+    .stat-c{background:#fff;border-radius:14px;padding:20px;box-shadow:0 3px 14px rgba(0,0,0,.05);display:flex;align-items:center;gap:14px;}
+    .stat-c .ico{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;}
+    .stat-c h3{margin:0;font-weight:800;font-size:24px;}
+    .stat-c p{margin:0;color:#717275;font-size:13px;}
+    .t-item{border:1px solid #eee;border-radius:12px;padding:16px;margin-bottom:12px;}
+    .t-item h5{font-weight:700;font-size:15px;margin-bottom:4px;}
+    .t-item p{color:#717275;font-size:13px;margin-bottom:8px;}
+    .badge-s{display:inline-block;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700;}
+    .bs-sub{background:#E6F6EC;color:#1A7F4E;}
+    .bs-pend{background:#FFF3CD;color:#8a6d3b;}
+    .form-sec{background:#f4f6f8;border-radius:12px;padding:18px;margin-bottom:18px;}
+    .form-sec h6{font-weight:700;margin-bottom:12px;}
+    .btn-green{background:#12B8A6;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-weight:600;font-size:14px;}
+    .btn-green:hover{background:#6a9a84;color:#fff;}
+    .student-row{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #eee;border-radius:12px;margin-bottom:8px;}
+    .s-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#12B8A6,#14112B);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;}
+    .s-info{flex:1;}
+    .s-info strong{font-size:14px;display:block;}
+    .s-info small{color:#717275;}
+    .announce-item{border-left:3px solid #12B8A6;padding:10px 14px;background:#f4f6f8;border-radius:0 10px 10px 0;margin-bottom:10px;}
+    @media(max-width:991px){.sb{display:none;}.main{margin-left:0;}}
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sb">
+  <div class="sb-logo"><span class="hp-logo">helpalot</span><div class="sb-sub">Trainer Dashboard</div></div>
+  <nav class="sb-nav">
+    <div class="sb-sec">Overview</div>
+    <a class="sb-link active" href="#" onclick="ST('home',this)"><i class="bi bi-grid"></i>Home</a>
+    <a class="sb-link" href="#" onclick="ST('students',this)"><i class="bi bi-people"></i>My Students</a>
+
+    <div class="sb-sec">Academics</div>
+    <a class="sb-link" href="#" onclick="ST('classes',this)"><i class="bi bi-camera-video"></i>Schedule Class</a>
+    <a class="sb-link" href="#" onclick="ST('content',this)"><i class="bi bi-book"></i>Upload Content</a>
+    <a class="sb-link" href="#" onclick="ST('tasks',this)"><i class="bi bi-clipboard-check"></i>Assign Tasks</a>
+    <a class="sb-link" href="#" onclick="ST('submissions',this)"><i class="bi bi-inbox"></i>Submissions</a>
+
+    <div class="sb-sec">Communication</div>
+    <a class="sb-link" href="#" onclick="ST('announce',this)"><i class="bi bi-megaphone"></i>Announcements</a>
+    <a class="sb-link" href="#" onclick="ST('attendance',this)"><i class="bi bi-calendar-check"></i>Attendance</a>
+
+    <div style="padding:16px 16px 0;">
+      <a class="sb-link" href="#" onclick="doLogout()" style="padding:8px 0;border:none;color:rgba(255,150,150,.8);"><i class="bi bi-box-arrow-left"></i>Logout</a>
+    </div>
+  </nav>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button class="d-lg-none btn btn-sm btn-outline-secondary" onclick="document.querySelector('.sb').style.display=document.querySelector('.sb').style.display==='block'?'none':'block'"><i class="bi bi-list"></i></button>
+      <h5 id="pageTitle">Trainer Dashboard</h5>
+    </div>
+    <div>
+      <span id="trainerNameTop" style="font-size:13px;color:#717275;margin-right:10px;"></span>
+      <span style="background:#E6F6EC;color:#1A7F4E;border-radius:100px;padding:4px 12px;font-size:12px;font-weight:700;">Trainer</span>
+    </div>
+  </div>
+
+  <!-- BANNER -->
+  <div class="dash-banner">
+    <h2 style="font-weight:700;margin-bottom:4px;">Hey, <span id="trainerName">Trainer</span> 👋</h2>
+    <p style="opacity:.8;font-size:14px;">Helpalot Academy – Trainer Panel</p>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none"><path fill="#f4f6f8" d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z"></path></svg>
+  </div>
+
+  <div class="body">
+
+    <!-- ===== HOME ===== -->
+    <div class="tab-pane-t active" id="tab-home">
+      <div class="row g-4 mb-4">
+        <div class="col-lg-3 col-6"><div class="stat-c"><div class="ico" style="background:#12B8A6;"><i class="bi bi-people"></i></div><div><h3 id="stStudents">–</h3><p>My Students</p></div></div></div>
+        <div class="col-lg-3 col-6"><div class="stat-c"><div class="ico" style="background:#5B3DF5;"><i class="bi bi-clipboard-check"></i></div><div><h3 id="stTasks">–</h3><p>Active Tasks</p></div></div></div>
+        <div class="col-lg-3 col-6"><div class="stat-c"><div class="ico" style="background:#FF8A3D;"><i class="bi bi-inbox"></i></div><div><h3 id="stSubs">–</h3><p>Submissions</p></div></div></div>
+        <div class="col-lg-3 col-6"><div class="stat-c"><div class="ico" style="background:#14112B;"><i class="bi bi-camera-video"></i></div><div><h3 id="stClasses">–</h3><p>Classes</p></div></div></div>
+      </div>
+      <div class="row g-4">
+        <div class="col-lg-8 col-12">
+          <div class="d-card">
+            <h4>Recent Submissions</h4>
+            <div id="recentSubs"><p style="color:#A6A6A6;">Loading...</p></div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-12">
+          <div class="d-card">
+            <h4>Quick Actions</h4>
+            <div class="d-grid gap-2">
+              <button class="btn-green" onclick="ST('classes',document.querySelector('[onclick*=classes]'))"><i class="bi bi-camera-video me-2"></i>Schedule Class</button>
+              <button class="btn btn-outline-secondary" onclick="ST('tasks',document.querySelector('[onclick*=tasks]'))"><i class="bi bi-clipboard-check me-2"></i>Assign Task</button>
+              <button class="btn btn-outline-secondary" onclick="ST('content',document.querySelector('[onclick*=content]'))"><i class="bi bi-book me-2"></i>Upload Content</button>
+              <button class="btn btn-outline-secondary" onclick="ST('announce',document.querySelector('[onclick*=announce]'))"><i class="bi bi-megaphone me-2"></i>Post Announcement</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STUDENTS ===== -->
+    <div class="tab-pane-t" id="tab-students">
+      <div class="d-card">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 style="margin:0;">My Students</h4>
+          <input class="form-control" style="max-width:220px;" placeholder="Search..." id="sSearch" oninput="filterStudents()">
+        </div>
+        <div id="studentList"><p style="color:#A6A6A6;">Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- ===== SCHEDULE CLASS ===== -->
+    <div class="tab-pane-t" id="tab-classes">
+      <div class="form-sec">
+        <h6>Schedule a Live Class</h6>
+        <div class="row g-2">
+          <div class="col-md-4"><input class="form-control" id="mTitle" placeholder="Class title (e.g. Docker Intro - Day 5)"></div>
+          <div class="col-md-4"><input class="form-control" id="mLink" placeholder="Meeting link (Zoom / GMeet URL)"></div>
+          <div class="col-md-2"><input class="form-control" type="date" id="mDate"></div>
+          <div class="col-md-1"><input class="form-control" type="time" id="mTime" value="19:00"></div>
+          <div class="col-md-1"><button class="btn-green w-100" onclick="scheduleClass()">Add</button></div>
+        </div>
+        <p style="font-size:13px;color:#717275;margin-top:10px;"><i class="bi bi-info-circle me-1"></i>Students will see this class link in their dashboard and get notified.</p>
+      </div>
+      <div class="d-card">
+        <h4>Scheduled Classes</h4>
+        <div id="classesList"><p style="color:#A6A6A6;">Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- ===== UPLOAD CONTENT ===== -->
+    <div class="tab-pane-t" id="tab-content">
+      <div class="form-sec">
+        <h6>Upload Learning Content</h6>
+        <div class="row g-2">
+          <div class="col-md-4"><input class="form-control" id="cTitle" placeholder="Content title *"></div>
+          <div class="col-md-5"><input class="form-control" id="cLink" placeholder="YouTube link / PDF URL / Drive link *"></div>
+          <div class="col-md-3">
+            <select class="form-control" id="cType">
+              <option value="video">📹 Video</option>
+              <option value="pdf">📄 PDF / Notes</option>
+              <option value="link">🔗 Article / Link</option>
+              <option value="recording">🎬 Class Recording</option>
+            </select>
+          </div>
+          <div class="col-md-9"><textarea class="form-control" id="cDesc" rows="2" placeholder="Brief description..."></textarea></div>
+          <div class="col-md-3"><button class="btn-green w-100 h-100" onclick="uploadContent()">Upload Content</button></div>
+        </div>
+      </div>
+      <div class="d-card">
+        <h4>Uploaded Content</h4>
+        <div id="contentList"><p style="color:#A6A6A6;">Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- ===== ASSIGN TASKS ===== -->
+    <div class="tab-pane-t" id="tab-tasks">
+      <div class="form-sec">
+        <h6>Create New Assignment / Task</h6>
+        <div class="row g-2">
+          <div class="col-md-5"><input class="form-control" id="tTitle" placeholder="Task title *"></div>
+          <div class="col-md-3">
+            <select class="form-control" id="tTarget">
+              <option value="all">All My Students</option>
+            </select>
+          </div>
+          <div class="col-md-2"><input class="form-control" type="date" id="tDue" placeholder="Due date"></div>
+          <div class="col-md-2"><button class="btn-green w-100" onclick="addTask()">Assign</button></div>
+          <div class="col-12"><textarea class="form-control" id="tDesc" rows="3" placeholder="Task description – be as detailed as possible *"></textarea></div>
+        </div>
+      </div>
+      <div class="d-card">
+        <h4>All Assigned Tasks</h4>
+        <div id="taskList"><p style="color:#A6A6A6;">Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- ===== SUBMISSIONS ===== -->
+    <div class="tab-pane-t" id="tab-submissions">
+      <div class="d-card">
+        <h4>Student Submissions</h4>
+        <p style="color:#717275;font-size:14px;">Review all task submissions from your students. Click "View" to open their submitted work.</p>
+        <div class="table-responsive">
+          <table class="table"><thead><tr>
+            <th>Student</th><th>Task</th><th>Submitted On</th><th>Link</th><th>Notes</th>
+          </tr></thead><tbody id="subsTable"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ANNOUNCEMENTS ===== -->
+    <div class="tab-pane-t" id="tab-announce">
+      <div class="form-sec">
+        <h6>Post Announcement to Students</h6>
+        <div class="row g-2">
+          <div class="col-md-9"><input class="form-control" id="aTitle" placeholder="Announcement title *"></div>
+          <div class="col-md-3"><button class="btn-green w-100" onclick="postAnnouncement()">Post</button></div>
+          <div class="col-12"><textarea class="form-control" id="aBody" rows="3" placeholder="Message *"></textarea></div>
+        </div>
+      </div>
+      <div class="d-card">
+        <h4>Posted Announcements</h4>
+        <div id="annList"><p style="color:#A6A6A6;">Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- ===== ATTENDANCE ===== -->
+    <div class="tab-pane-t" id="tab-attendance">
+      <div class="d-card">
+        <h4>Mark Attendance</h4>
+        <p style="color:#717275;font-size:14px;">Mark attendance for today's class. Students who joined the meeting are auto-marked, but you can manually adjust here.</p>
+        <div id="attendanceList"><p style="color:#A6A6A6;">Loading students...</p></div>
+        <button class="btn-green mt-3" onclick="saveAttendance()"><i class="bi bi-check2-all me-2"></i>Save Attendance</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/jquery.min.js"></script><script src="js/bootstrap.bundle.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig={apiKey:"AIzaSyDoaJ4fOXZHWqKYlTo9nCf-Dy6IEwCvXKg",authDomain:"ndyo-intrenship.firebaseapp.com",projectId:"ndyo-intrenship",storageBucket:"ndyo-intrenship.firebasestorage.app",messagingSenderId:"1053500008575",appId:"1:1053500008575:web:4c599d68a06eaf09c7374a"};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(),db=firebase.firestore();
+
+// Trainer auth - any approved user marked as trainer can access
+// For now: trainers log in via the same Firebase Auth
+// In production: add a 'trainers' collection with trainer UIDs and check membership
+
+let CT=null,CS=null,allStudents=[];
+
+auth.onAuthStateChanged(async user=>{
+  if(!user){window.location.href='Helpalot-Academy-Login.html';return;}
+  CT=user;
+  // Check if user is a trainer (has a trainer record) OR is admin
+  const trainerSnap=await db.collection('trainers').doc(user.uid).get();
+  const isAdmin=['admin@helpalot.help'].includes(user.email.toLowerCase());
+  if(!trainerSnap.exists&&!isAdmin){
+    // Not a trainer — check if student
+    const studentSnap=await db.collection('students').doc(user.uid).get();
+    if(studentSnap.exists){window.location.href='Helpalot-Academy-Dashboard.html';return;}
+    await auth.signOut();window.location.href='Helpalot-Academy-Login.html';return;
+  }
+  const trainerData=trainerSnap.exists?trainerSnap.data():{name:user.email,subject:'General'};
+  CS=trainerData;
+  document.getElementById('trainerName').textContent=trainerData.name||user.email;
+  document.getElementById('trainerNameTop').textContent=trainerData.name||user.email;
+  loadAll();
+});
+
+function doLogout(){auth.signOut().then(()=>window.location.href='Helpalot-Academy-Login.html');}
+
+function ST(name,el){
+  document.querySelectorAll('.tab-pane-t').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(el)el.classList.add('active');
+  const titles={home:'Dashboard',students:'My Students',classes:'Schedule Class',content:'Learning Content',tasks:'Assign Tasks',submissions:'Submissions',announce:'Announcements',attendance:'Attendance'};
+  document.getElementById('pageTitle').textContent=titles[name]||name;
+  return false;
+}
+
+async function loadAll(){loadStudents();loadClasses();loadContent();loadTasks();loadSubmissions();loadAnnouncements();}
+
+async function loadStudents(){
+  const snap=await db.collection('students').where('status','==','approved').get();
+  allStudents=[];snap.forEach(d=>allStudents.push({id:d.id,...d.data()}));
+  document.getElementById('stStudents').textContent=allStudents.length;
+  renderStudents(allStudents);
+  // populate task target select
+  const sel=document.getElementById('tTarget');
+  sel.innerHTML='<option value="all">All My Students</option>'+allStudents.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  // attendance list
+  document.getElementById('attendanceList').innerHTML=allStudents.map(s=>`
+    <div class="student-row">
+      <div class="s-avatar">${s.name[0]}</div>
+      <div class="s-info"><strong>${s.name}</strong><small>${s.email} • ${s.domain}</small></div>
+      <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="att_${s.id}" checked></div>
+    </div>
+  `).join('');
+}
+function renderStudents(list){
+  document.getElementById('studentList').innerHTML=list.map(s=>`
+    <div class="student-row">
+      <div class="s-avatar">${s.name[0]}</div>
+      <div class="s-info"><strong>${s.name}</strong><small>${s.email} • ${s.domain} • ${s.college||''}</small></div>
+      <span style="background:#E6F6EC;color:#1A7F4E;border-radius:100px;padding:2px 12px;font-size:12px;font-weight:700;">Active</span>
+    </div>
+  `).join('')||'<p style="color:#A6A6A6;">No approved students yet.</p>';
+}
+function filterStudents(){
+  const q=document.getElementById('sSearch').value.toLowerCase();
+  renderStudents(allStudents.filter(s=>(s.name+s.email).toLowerCase().includes(q)));
+}
+
+async function loadClasses(){
+  const snap=await db.collection('meetings').orderBy('date','desc').get();
+  document.getElementById('stClasses').textContent=snap.size;
+  const el=document.getElementById('classesList');
+  if(snap.empty){el.innerHTML='<p style="color:#A6A6A6;">No classes scheduled yet.</p>';return;}
+  let h='';
+  const today=new Date().toISOString().split('T')[0];
+  snap.forEach(doc=>{const m=doc.data();
+    h+=`<div class="t-item"><div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <div><h5>${m.title}</h5><small style="color:#717275;"><i class="bi bi-calendar3 me-1"></i>${m.date} at ${m.time}</small></div>
+      <div>
+        <a href="${m.link}" target="_blank" class="btn btn-sm btn-success me-2"><i class="bi bi-camera-video-fill"></i> Start</a>
+        <button class="btn btn-sm btn-outline-danger" onclick="del('meetings','${doc.id}',loadClasses)"><i class="bi bi-trash"></i></button>
+      </div>
+    </div></div>`;
+  });
+  el.innerHTML=h;
+}
+async function scheduleClass(){
+  const title=document.getElementById('mTitle').value.trim(),link=document.getElementById('mLink').value.trim();
+  const date=document.getElementById('mDate').value,time=document.getElementById('mTime').value;
+  if(!title||!link||!date){alert('Title, link and date are required.');return;}
+  await db.collection('meetings').add({title,link,date,time,createdBy:CT.uid,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+  ['mTitle','mLink','mDate'].forEach(id=>document.getElementById(id).value='');
+  loadClasses();
+}
+
+async function loadContent(){
+  const snap=await db.collection('content').orderBy('createdAt','desc').get();
+  const el=document.getElementById('contentList');
+  if(snap.empty){el.innerHTML='<p style="color:#A6A6A6;">No content uploaded yet.</p>';return;}
+  let h='';
+  const icons={video:'📹',pdf:'📄',link:'🔗',recording:'🎬'};
+  snap.forEach(doc=>{const c=doc.data();
+    h+=`<div class="t-item"><div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <div><h5>${icons[c.type]||'📄'} ${c.title}</h5><p>${c.description||''}</p><a href="${c.link}" target="_blank" style="font-size:13px;color:#12B8A6;">${c.link.substring(0,60)}...</a></div>
+      <button class="btn btn-sm btn-outline-danger" onclick="del('content','${doc.id}',loadContent)"><i class="bi bi-trash"></i></button>
+    </div></div>`;
+  });
+  el.innerHTML=h;
+}
+async function uploadContent(){
+  const title=document.getElementById('cTitle').value.trim(),link=document.getElementById('cLink').value.trim();
+  const type=document.getElementById('cType').value,desc=document.getElementById('cDesc').value.trim();
+  if(!title||!link){alert('Title and link are required.');return;}
+  await db.collection('content').add({title,link,type,description:desc,uploadedBy:CT.uid,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+  ['cTitle','cLink','cDesc'].forEach(id=>document.getElementById(id).value='');
+  loadContent();
+}
+
+async function loadTasks(){
+  const snap=await db.collection('tasks').orderBy('createdAt','desc').get();
+  document.getElementById('stTasks').textContent=snap.size;
+  const el=document.getElementById('taskList');
+  if(snap.empty){el.innerHTML='<p style="color:#A6A6A6;">No tasks assigned yet.</p>';return;}
+  let h='';
+  snap.forEach(doc=>{const t=doc.data();
+    const tLabel=t.target==='all'?'All Students':(allStudents.find(s=>s.id===t.target)?.name||'Student');
+    h+=`<div class="t-item"><div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+      <div><h5>${t.title}</h5><p>${t.description||''}</p><small style="color:#A6A6A6;">→ ${tLabel}${t.dueDate?' • Due: '+t.dueDate:''}</small></div>
+      <button class="btn btn-sm btn-outline-danger" onclick="del('tasks','${doc.id}',loadTasks)"><i class="bi bi-trash"></i></button>
+    </div></div>`;
+  });
+  el.innerHTML=h;
+}
+async function addTask(){
+  const title=document.getElementById('tTitle').value.trim(),desc=document.getElementById('tDesc').value.trim();
+  const target=document.getElementById('tTarget').value,due=document.getElementById('tDue').value;
+  if(!title||!desc){alert('Title and description required.');return;}
+  await db.collection('tasks').add({title,description:desc,target,dueDate:due||null,createdBy:CT.uid,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+  ['tTitle','tDesc','tDue'].forEach(id=>document.getElementById(id).value='');
+  loadTasks();
+}
+
+async function loadSubmissions(){
+  const snap=await db.collection('submissions').orderBy('submittedAt','desc').get();
+  document.getElementById('stSubs').textContent=snap.size;
+  const body=document.getElementById('subsTable');
+  const recentEl=document.getElementById('recentSubs');
+  if(snap.empty){body.innerHTML='<tr><td colspan="5" style="color:#A6A6A6;">No submissions yet.</td></tr>';recentEl.innerHTML='<p style="color:#A6A6A6;font-size:14px;">No submissions yet.</p>';return;}
+  let h='',recentH='';
+  let count=0;
+  snap.forEach(doc=>{const s=doc.data();
+    const date=s.submittedAt?new Date(s.submittedAt.toDate()).toLocaleDateString():'–';
+    h+=`<tr><td><strong>${s.studentName||'–'}</strong><br><small style="color:#A6A6A6;">${s.studentEmail||''}</small></td>
+    <td>${s.taskTitle||'–'}</td><td>${date}</td>
+    <td>${s.link?`<a href="${s.link}" target="_blank" class="btn btn-sm btn-outline-primary">View</a>`:'–'}</td>
+    <td>${(s.text||'').substring(0,50)}</td></tr>`;
+    if(count<3){recentH+=`<div class="t-item"><div class="d-flex justify-content-between align-items-center"><div><h5>${s.studentName||'–'}</h5><p>${s.taskTitle||'–'}</p></div><div>${s.link?`<a href="${s.link}" target="_blank" class="btn btn-sm btn-outline-primary">View</a>`:''} <span class="badge-s bs-sub">Submitted</span></div></div></div>`;count++;}
+  });
+  body.innerHTML=h;recentEl.innerHTML=recentH||'<p style="color:#A6A6A6;font-size:14px;">No submissions yet.</p>';
+}
+
+async function loadAnnouncements(){
+  const snap=await db.collection('announcements').orderBy('createdAt','desc').get();
+  const el=document.getElementById('annList');
+  if(snap.empty){el.innerHTML='<p style="color:#A6A6A6;">No announcements yet.</p>';return;}
+  let h='';
+  snap.forEach(doc=>{const a=doc.data();
+    h+=`<div class="announce-item" style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div><strong>${a.title}</strong><p style="font-size:14px;color:#717275;margin:4px 0 0;">${a.body}</p></div>
+      <button class="btn btn-sm btn-outline-danger ms-2" onclick="del('announcements','${doc.id}',loadAnnouncements)"><i class="bi bi-trash"></i></button>
+    </div>`;
+  });
+  el.innerHTML=h;
+}
+async function postAnnouncement(){
+  const title=document.getElementById('aTitle').value.trim(),body=document.getElementById('aBody').value.trim();
+  if(!title||!body){alert('Title and message required.');return;}
+  await db.collection('announcements').add({title,body,createdBy:CT.uid,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+  document.getElementById('aTitle').value='';document.getElementById('aBody').value='';
+  loadAnnouncements();
+}
+
+async function saveAttendance(){
+  const today=new Date().toISOString().split('T')[0];
+  const batch=db.batch();
+  allStudents.forEach(s=>{
+    const present=document.getElementById('att_'+s.id)?.checked||false;
+    const ref=db.collection('attendance').doc(`${today}_${s.id}`);
+    batch.set(ref,{uid:s.id,studentName:s.name,date:today,present,markedBy:CT.uid,markedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+  });
+  await batch.commit();
+  alert('Attendance saved for '+today);
+}
+
+async function del(col,id,cb){if(!confirm('Delete this item?'))return;await db.collection(col).doc(id).delete();cb();}
+</script>
+</body></html>
